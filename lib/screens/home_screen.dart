@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../tabs/home_tab.dart';
+
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
 
@@ -12,12 +14,7 @@ class HomeScreen extends StatelessWidget {
       controller: _pageController,
       physics: NeverScrollableScrollPhysics(),
       children: [
-        Container(
-          color: Colors.yellow,
-        ),
-        Container(
-          color: Colors.red,
-        )
+        HomeTab()
       ],
     );
   }
