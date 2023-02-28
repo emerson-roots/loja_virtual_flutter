@@ -14,11 +14,14 @@ class HomeScreen extends StatelessWidget {
     return PageView(
       controller: _pageController,
       physics: const NeverScrollableScrollPhysics(),
-      children: const [
+      children: [
         Scaffold(
           body: HomeTab(),
-            drawer: CustomDrawer(),
-        )
+            drawer: CustomDrawer(_pageController),
+        ),
+        Container(color: Colors.red,),
+        Container(color: Colors.yellow,),
+        Container(color: Colors.pink,)
       ],
     );
   }

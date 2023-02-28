@@ -4,9 +4,11 @@ class DrawerTileCustom extends StatelessWidget {
   // properties
   final IconData icon;
   final String text;
+  final PageController pageController;
+  final int page;
 
-  // cosntructor
-  DrawerTileCustom(this.icon, this.text);
+  // constructor
+  DrawerTileCustom(this.icon, this.text, this.pageController, this.page);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,11 @@ class DrawerTileCustom extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          pageController.jumpToPage(page);
+          // fecha o menu hamburguer
+          Navigator.of(context).pop();
+        },
         child: Container(
           height: 50.0,
           child: Row(
@@ -22,14 +28,21 @@ class DrawerTileCustom extends StatelessWidget {
               Icon(
                 icon,
                 size: 32,
-                color: Colors.black,
+                color: pageController.page!.round() == page
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey[700],
               ),
               const SizedBox(
                 width: 20.0,
               ),
               Text(
                 text,
-                style: const TextStyle(fontSize: 16.0, color: Colors.black),
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: pageController.page!.round() == page
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey[700],
+                ),
               )
             ],
           ),
