@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/screens/category_screen.dart';
 
 class CategoryTileCustom extends StatelessWidget {
   /*
@@ -20,7 +21,11 @@ class CategoryTileCustom extends StatelessWidget {
         snapshot.get('title'),
       ),
       trailing: const Icon(Icons.keyboard_arrow_right),
-      onTap: () {},
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => CategoryScreen(snapshot))
+        );
+      },
     );
   }
 }
