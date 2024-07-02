@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:loja_virtual/tiles/category_tile.dart';
 
 class ProductsTab extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<QuerySnapshot>(
