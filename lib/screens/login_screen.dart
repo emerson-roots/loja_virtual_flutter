@@ -5,10 +5,21 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../models/user_model.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   // permite o acesso ao formulário atraves do botao de entrar
   // utilizado para validar os campos preenchidos de formulario
   final _formKey = GlobalKey<FormState>();
+
+  // controladores para capturar informacoes de binding da tela
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -70,9 +81,10 @@ class LoginScreen extends StatelessWidget {
             return Form(
               key: _formKey,
               child: ListView(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 children: [
                   TextFormField(
+                    controller: _emailController,
                     decoration: const InputDecoration(hintText: "E-mail"),
                     keyboardType: TextInputType.emailAddress,
                     validator: (text) {
@@ -85,6 +97,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16.0),
                   TextFormField(
+                    controller: _passwordController,
                     decoration: const InputDecoration(hintText: "Senha"),
                     obscureText: true,
                     validator: (text) {
@@ -130,7 +143,11 @@ class LoginScreen extends StatelessWidget {
                           builder: (context) => HomeScreen()));
                     }*/
 
-                      model.signIn();
+                      model.signIn(
+                          email: _emailController.text,
+                          pass: _passwordController.text,
+                          onSuccess: _onSuccess,
+                          onFail: _onFail);
                     },
                     child: const Text(
                       "ENTRAR",
@@ -144,6 +161,41 @@ class LoginScreen extends StatelessWidget {
               ),
             );
           }
+        },
+      ),
+    );
+  }
+
+  void _onSuccess() {
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+  }
+
+  String _onFail(String exMessage) {
+    final snackBar = _snackBarMessage(
+        mensagem: 'Falha ao entrar. ${exMessage}',
+        corSnackBar: Colors.redAccent,
+        tempoDuracaoMensagem: 4);
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    return exMessage;
+  }
+
+  SnackBar _snackBarMessage({
+    required String mensagem,
+    required Color corSnackBar,
+    required int tempoDuracaoMensagem,
+  }) {
+    return SnackBar(
+      content: Text(mensagem),
+      backgroundColor: corSnackBar,
+      duration: Duration(seconds: tempoDuracaoMensagem),
+      action: SnackBarAction(
+        label: 'FECHAR',
+        textColor: Colors.white,
+        onPressed: () {
+          // Alguma ação opcional
         },
       ),
     );

@@ -181,13 +181,15 @@ class _SignupScreenState extends State<SignupScreen> {
     });
   }
 
-  void _onFail() {
+  String _onFail(String exMessage) {
     final snackBar = _snackBarMessage(
-        mensagem: 'Falha ao criar usuário.',
+        mensagem: 'Falha ao criar usuário. ${exMessage}',
         corSnackBar: Colors.redAccent,
         tempoDuracaoMensagem: 4);
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    return exMessage;
   }
 
   SnackBar _snackBarMessage({
