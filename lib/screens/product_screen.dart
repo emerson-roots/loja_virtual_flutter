@@ -41,6 +41,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   Widget _corpoDaTelaScrollable() {
     final Color primaryColor = Theme.of(context).primaryColor;
+    const bool botaoArredondado = false;
     return ListView(
       children: [
         _carouselSlider(),
@@ -72,6 +73,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 "Tamanho",
                 style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
               ),
+              // lista de tamanhos do produto
               SizedBox(
                 height: 34.0,
                 child: GridView(
@@ -107,6 +109,38 @@ class _ProductScreenState extends State<ProductScreen> {
                   }).toList(),
                 ),
               ),
+              const SizedBox(height: 16.0),
+              SizedBox(
+                height: 44.0,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryColor,
+                    disabledBackgroundColor: Colors.grey.shade400,
+                    shape: botaoArredondado
+                        ? const StadiumBorder()
+                        : RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(3.0),
+                          ),
+                  ),
+                  onPressed: sizeSelecionado != null ? () {} : null,
+                  child: const Text(
+                    "Adicionar ao Carrinho",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 16.0),
+              const Text(
+                "Descrição",
+                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
+              ),
+              Text(
+                product.description!,
+                style: TextStyle(fontSize: 16.0),
+              )
             ],
           ),
         ),
