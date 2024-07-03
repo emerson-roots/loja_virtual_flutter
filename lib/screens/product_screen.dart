@@ -14,6 +14,7 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> {
   final ProductData product;
   int _current = 0;
+  String? sizeSelecionado;
   final CarouselController _controller = CarouselController();
 
   _ProductScreenState(this.product);
@@ -39,10 +40,76 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   Widget _corpoDaTelaScrollable() {
+    final Color primaryColor = Theme.of(context).primaryColor;
     return ListView(
       children: [
         _carouselSlider(),
-        _tituloProdutoComPreco(),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // titulo
+              Text(
+                product.title!,
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w500,
+                ),
+                maxLines: 3,
+              ),
+              // preço
+              Text(
+                "R\$ ${product.price!.toStringAsFixed(2)}",
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                  color: primaryColor,
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              const Text(
+                "Tamanho",
+                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
+              ),
+              SizedBox(
+                height: 34.0,
+                child: GridView(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  scrollDirection: Axis.horizontal,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                      mainAxisSpacing: 8.0,
+                      childAspectRatio: 0.5),
+                  children: product.sizes!.map((tamanhoProduto) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          sizeSelecionado = tamanhoProduto;
+                        });
+                      },
+                      child: Container(
+                        width: 50.0,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(4.0)),
+                          border: Border.all(
+                            color: tamanhoProduto == sizeSelecionado
+                                ? primaryColor
+                                : Colors.grey.shade500,
+                            width: 2.0,
+                          ),
+                        ),
+                        child: Text(tamanhoProduto),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -118,34 +185,6 @@ class _ProductScreenState extends State<ProductScreen> {
           ),
         );
       }).toList(),
-    );
-  }
-
-  Padding _tituloProdutoComPreco() {
-    final Color primaryColor = Theme.of(context).primaryColor;
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            product.title!,
-            style: const TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.w500,
-            ),
-            maxLines: 3,
-          ),
-          Text(
-            "R\$ ${product.price!.toStringAsFixed(2)}",
-            style: TextStyle(
-              fontSize: 22.0,
-              fontWeight: FontWeight.bold,
-              color: primaryColor,
-            ),
-          )
-        ],
-      ),
     );
   }
 }
