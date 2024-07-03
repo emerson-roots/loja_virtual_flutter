@@ -11,11 +11,13 @@ class UserModel extends Model {
 
   bool isLoading = false;
 
-  void signUp({required Map<String, dynamic> userData,
+  bool signUp({required Map<String, dynamic> userData,
     required String pass,
     required VoidCallback onSuccess,
     required VoidCallback onFail}) {
     configuraIsLoading(true);
+
+    bool isContaCriadaComSucesso = false;
     _auth
         .createUserWithEmailAndPassword(
       email: userData["email"],
@@ -27,10 +29,13 @@ class UserModel extends Model {
 
       onSuccess();
       configuraIsLoading(false);
+      isContaCriadaComSucesso = true;
     }).catchError((ex) {
       onFail();
       configuraIsLoading(false);
+      isContaCriadaComSucesso = false;
     });
+    return isContaCriadaComSucesso;
   }
 
   void signIn() async {
@@ -43,7 +48,7 @@ class UserModel extends Model {
   }
 
   bool isLoggedIn() {
-    return false;
+    return firebaseUser != null;
   }
 
   void configuraIsLoading(bool isLoading) {
@@ -55,5 +60,14 @@ class UserModel extends Model {
     this.userData = userData;
     await FirebaseFirestore.instance.collection("users").doc(
         firebaseUser!.user!.uid).set(userData);
+  }
+
+  void signOut() async {
+    await _auth.signOut();
+
+    userData = Map();
+    firebaseUser = null;
+
+    notifyListeners();
   }
 }

@@ -127,14 +127,15 @@ class _SignupScreenState extends State<SignupScreen> {
                           "address": _addressController.text
                         };
 
-                        model.signUp(
+                        var isContaCriadaComSucesso = model.signUp(
                             userData: userData,
                             pass: _passController.text,
                             onSuccess: _onSuccess,
                             onFail: _onFail);
 
-                        _limparCampos();
-
+                        if (isContaCriadaComSucesso) {
+                          _limparCampos();
+                        }
                         /* Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => HomeScreen()));*/
                       }
@@ -164,10 +165,47 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void _onSuccess() {
-    print("========> SUCESSO!!!");
+    int tempoRedirectHomeAndDuracaoMensagem = 2;
+    final snackBar = _snackBarMessage(
+      mensagem: 'Usuário criado com sucesso.',
+      corSnackBar: Theme.of(context).primaryColor,
+      tempoDuracaoMensagem: tempoRedirectHomeAndDuracaoMensagem,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    Future.delayed(Duration(seconds: tempoRedirectHomeAndDuracaoMensagem))
+        .then((_) {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => HomeScreen()));
+    });
   }
 
   void _onFail() {
-    print("========> FALHOU!!!");
+    final snackBar = _snackBarMessage(
+        mensagem: 'Falha ao criar usuário.',
+        corSnackBar: Colors.redAccent,
+        tempoDuracaoMensagem: 4);
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  SnackBar _snackBarMessage({
+    required String mensagem,
+    required Color corSnackBar,
+    required int tempoDuracaoMensagem,
+  }) {
+    return SnackBar(
+      content: Text(mensagem),
+      backgroundColor: corSnackBar,
+      duration: Duration(seconds: tempoDuracaoMensagem),
+      action: SnackBarAction(
+        label: 'FECHAR',
+        textColor: Colors.white,
+        onPressed: () {
+          // Alguma ação opcional
+        },
+      ),
+    );
   }
 }
