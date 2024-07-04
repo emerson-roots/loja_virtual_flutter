@@ -119,7 +119,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           minimumSize: const Size(50, 30),
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           alignment: Alignment.centerRight),
-                      onPressed: () {},
+                      onPressed: () {
+                        if (_emailController.text.isEmpty) {
+                          _showSnackBarMessage(
+                              mensagem: "Insira seu e-mail para recuperação.",
+                              corSnackBar: Colors.redAccent,
+                              tempoDuracaoMensagem: 3);
+                        } else{
+                          model.recoverPass(_emailController.text);
+
+                          _showSnackBarMessage(
+                              mensagem: "Verifique seu e-mail.",
+                              corSnackBar: Colors.blue.shade600,
+                              tempoDuracaoMensagem: 3);
+                        }
+                      },
                       child: const Text(
                         "Esqueci minha senha",
                         textAlign: TextAlign.right,
@@ -172,22 +186,22 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String _onFail(String exMessage) {
-    final snackBar = _snackBarMessage(
+    _showSnackBarMessage(
         mensagem: 'Falha ao entrar. ${exMessage}',
         corSnackBar: Colors.redAccent,
         tempoDuracaoMensagem: 4);
 
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
     return exMessage;
   }
 
-  SnackBar _snackBarMessage({
+  void _showSnackBarMessage({
     required String mensagem,
     required Color corSnackBar,
     required int tempoDuracaoMensagem,
   }) {
-    return SnackBar(
+    var snackBar =  SnackBar(
+
       content: Text(mensagem),
       backgroundColor: corSnackBar,
       duration: Duration(seconds: tempoDuracaoMensagem),
@@ -199,5 +213,8 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       ),
     );
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
