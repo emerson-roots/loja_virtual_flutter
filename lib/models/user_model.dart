@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 // Definindo o tipo de função que retorna uma String
@@ -13,6 +14,10 @@ class UserModel extends Model {
   Map<String, dynamic> userData = Map();
 
   bool isLoading = false;
+
+  static UserModel of(BuildContext context){
+    return ScopedModel.of<UserModel>(context);
+  }
 
   @override
   void addListener(VoidCallback listener) {

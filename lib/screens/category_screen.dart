@@ -53,7 +53,6 @@ class CategoryScreen extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             } else {
-              print('===========> passou aqui');
               int qtdItensNaGrade = snapshot.data!.docs.length;
 
               return TabBarView(
@@ -62,15 +61,18 @@ class CategoryScreen extends StatelessWidget {
                   GridView.builder(
                     padding: EdgeInsets.all(4.0),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: maximoItensNaHorizontal,
-                        mainAxisSpacing: 4.0,
-                        crossAxisSpacing: 4.0,
-                        childAspectRatio: 0.65),
+                      crossAxisCount: maximoItensNaHorizontal,
+                      mainAxisSpacing: 4.0,
+                      crossAxisSpacing: 4.0,
+                      childAspectRatio: 0.65,
+                    ),
                     itemCount: qtdItensNaGrade,
                     itemBuilder: (context, index) {
+                      ProductData data = ProductData.fromDocument(snapshot.data!.docs[index]);
+                      data.category = this.snapshot.id;
                       return ProductTile(
                         "grid",
-                        ProductData.fromDocument(snapshot.data!.docs[index]),
+                        data,
                       );
                     },
                   ),
@@ -78,11 +80,12 @@ class CategoryScreen extends StatelessWidget {
                       padding: EdgeInsets.all(4.0),
                       itemCount: qtdItensNaGrade,
                       itemBuilder: (context, index) {
+
+                        ProductData data = ProductData.fromDocument(snapshot.data!.docs[index]);
+                        data.category = this.snapshot.id;
                         return ProductTile(
                           "list",
-                          ProductData.fromDocument(
-                            snapshot.data!.docs[index],
-                          ),
+                          data,
                         );
                       })
                 ],
