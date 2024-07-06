@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
 import 'package:loja_virtual/models/cart_model.dart';
 import 'package:loja_virtual/models/user_model.dart';
+import 'package:loja_virtual/screens/cart_screen.dart';
 import 'package:loja_virtual/screens/login_screen.dart';
 import '../datas/product_data.dart';
 
@@ -138,6 +139,10 @@ class _ProductScreenState extends State<ProductScreen> {
 
                           // adicionar ao carrinho
                           CartModel.of(context).addCartItem(cartProduct);
+
+                          Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => CartScreen())
+                          );
                         } else {
                           Navigator.of(context).push(
                             MaterialPageRoute(builder: (context) => LoginScreen())
