@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
 import 'package:loja_virtual/datas/product_data.dart';
+import 'package:loja_virtual/models/cart_model.dart';
 
 import '../widgets/custom_activity_indicator.dart';
 
@@ -17,11 +18,17 @@ class CartTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(8.0),
-            width: 120.0,
-            child: Image.network(
-              cartProduct.productData!.images![0],
-              fit: BoxFit.cover,
+            padding: const EdgeInsets.all(
+              8.0,
+            ),
+            width: 115.0,
+            height: 140.0,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(6.0),
+              child: Image.network(
+                cartProduct.productData!.images![0],
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Expanded(
@@ -51,17 +58,26 @@ class CartTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       IconButton(
-                        onPressed: cartProduct.quantity! > 1 ? () {} : null,
+                        onPressed: cartProduct.quantity! > 1
+                            ? () {
+                                CartModel.of(context)
+                                    .decrementProduct(cartProduct);
+                              }
+                            : null,
                         icon: const Icon(Icons.remove),
                         color: Theme.of(context).primaryColor,
                       ),
                       Text(cartProduct.quantity.toString()),
                       IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            CartModel.of(context).incrementProduct(cartProduct);
+                          },
                           icon: const Icon(Icons.add),
                           color: Theme.of(context).primaryColor),
                       TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            CartModel.of(context).removeCartItem(cartProduct);
+                          },
                           child: const Text(
                             "Remover",
                             style: TextStyle(color: Colors.grey),
