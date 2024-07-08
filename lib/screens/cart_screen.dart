@@ -4,6 +4,7 @@ import 'package:loja_virtual/screens/login_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../models/cart_model.dart';
+import '../tiles/cart_tile.dart';
 import '../widgets/custom_activity_indicator.dart';
 
 class CartScreen extends StatelessWidget {
@@ -92,15 +93,17 @@ class CartScreen extends StatelessWidget {
               ),
             );
           } else {
-            return const Center(
-              child: Text(
-                "Esta condição IF será feita na próxima aula (aula 234)...",
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+            return ListView(
+              children: [
+                Column(
+                  children:
+                   model.products.map(
+                       (produto){
+                         return CartTile(produto);
+                       }
+                   ).toList(),
                 ),
-                textAlign: TextAlign.center,
-              ),
+              ],
             );
           }
         },
