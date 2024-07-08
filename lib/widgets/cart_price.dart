@@ -15,9 +15,14 @@ class CartPrice extends StatelessWidget {
         vertical: 4.0,
       ),
       child: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: ScopedModelDescendant<CartModel>(
           builder: (context, child, model) {
+            double price = model.getProductsPrice();
+            double discount = model.getDiscount();
+            double ship = model.getShipPrice();
+            double total = price + ship - discount;
+
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -33,7 +38,7 @@ class CartPrice extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text("Subtotal"),
-                    Text("R\$ 0.00"),
+                    Text("R\$ ${price.toStringAsFixed(2)}"),
                   ],
                 ),
                 const Divider(),
@@ -41,7 +46,7 @@ class CartPrice extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text("Desconto"),
-                    Text("R\$ 0.00"),
+                    Text("(-) R\$ ${discount.toStringAsFixed(2)}"),
                   ],
                 ),
                 const Divider(),
@@ -49,24 +54,27 @@ class CartPrice extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text("Entrega"),
-                    Text("R\$ 0.00"),
+                    Text("(+) R\$ ${ship.toStringAsFixed(2)}"),
                   ],
                 ),
                 const Divider(),
-                const SizedBox(
-                  height: 12.0,
-                ),
+                const SizedBox(height: 12.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
                       "Total",
-                      style: TextStyle(fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                    Text("R\$ 0.00",
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            color: Theme.of(context).primaryColor))
+                    Text(
+                      "R\$ ${total.toStringAsFixed(2)}",
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    )
                   ],
                 ),
                 const SizedBox(height: 12.0),
