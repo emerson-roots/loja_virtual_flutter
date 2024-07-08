@@ -114,7 +114,59 @@ class CartModel extends Model {
     return getProductsPrice() * discountPercentage / 100;
   }
 
-  void updatePrices(){
+  void updatePrices() {
     notifyListeners();
+  }
+
+  Future<String?> finishOrder() async {
+    if (products.isEmpty) return null;
+
+    isLoading = true;
+    notifyListeners();
+
+    double productsPrice = getProductsPrice();
+    double shipPrice = getShipPrice();
+    double discount = getDiscount();
+
+    // salva o pedido no firebase
+    DocumentReference refOrderId =
+        await FirebaseFirestore.instance.collection("orders").add({
+      "clientId": user.firebaseUser!.uid,
+      "products": products.map((cartProduct) => cartProduct.toMap()).toList(),
+      "shipPrice": shipPrice,
+      "productsPrice": productsPrice,
+      "totalPrice": productsPrice - discount + shipPrice,
+      "status": 1
+    });
+
+    // seta/associa o id do pedido para o usuario
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user.firebaseUser!.uid)
+        .collection("orders")
+        .doc(refOrderId.id)
+        .set({"orderId": refOrderId.id});
+
+    QuerySnapshot query = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user.firebaseUser!.uid)
+        .collection("cart")
+        .get();
+
+    // remove produtos do carrinho
+    for (var doc in query.docs) {
+      doc.reference.delete();
+    }
+
+    // limpa o bound
+    products.clear();
+
+    couponCode = null;
+    discountPercentage = 0;
+
+    isLoading = false;
+    notifyListeners();
+
+    return refOrderId.id;
   }
 }

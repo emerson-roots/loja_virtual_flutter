@@ -86,7 +86,7 @@ class CartPrice extends StatelessWidget {
                       borderRadius: BorderRadius.circular(3.0),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: buy,
                   child: const Text(
                     "Finalizar pedido",
                     style: TextStyle(color: Colors.white),
