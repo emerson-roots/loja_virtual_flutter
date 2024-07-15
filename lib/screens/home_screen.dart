@@ -3,6 +3,7 @@ import 'package:loja_virtual/widgets/cart_button.dart';
 
 import '../tabs/home_tab.dart';
 import '../tabs/orders_tab.dart';
+import '../tabs/places_tab.dart';
 import '../tabs/products_tab.dart';
 import '../widgets/custom_drawer.dart';
 
@@ -33,8 +34,17 @@ class HomeScreen extends StatelessWidget {
           body: ProductsTab(),
           floatingActionButton: CartButtonCustomizado(true),
         ),
-        Container(
-          color: Colors.yellow,
+        Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            title: const Text(
+              "Lojas",
+              style: TextStyle(color: Colors.white),
+            ),
+            centerTitle: true,
+          ),
+          body: PlacesTab(),
+          drawer: CustomDrawer(_pageController),
         ),
         Scaffold(
           appBar: AppBar(
