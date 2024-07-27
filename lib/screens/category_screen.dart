@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/datas/categoria.dart';
 
 import '../datas/product_data.dart';
 import '../tiles/product_tile.dart';
 
 class CategoryScreen extends StatelessWidget {
-  final DocumentSnapshot snapshot;
+  final Categoria categoria;
 
-  CategoryScreen(this.snapshot);
+  CategoryScreen(this.categoria);
 
   int qtdTabs = 2;
   int maximoItensNaHorizontal = 2;
@@ -20,7 +21,7 @@ class CategoryScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
-            snapshot.get('title'),
+            categoria.title,
             style: const TextStyle(color: Colors.white),
           ),
           centerTitle: true,
@@ -44,22 +45,22 @@ class CategoryScreen extends StatelessWidget {
         body: FutureBuilder<QuerySnapshot>(
           future: FirebaseFirestore.instance
               .collection('products')
-              .doc(snapshot.id)
+              .doc(categoria.id)
               .collection('items')
               .get(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             } else {
               int qtdItensNaGrade = snapshot.data!.docs.length;
 
               return TabBarView(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   GridView.builder(
-                    padding: EdgeInsets.all(4.0),
+                    padding: const EdgeInsets.all(4.0),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: maximoItensNaHorizontal,
                       mainAxisSpacing: 4.0,
@@ -68,8 +69,9 @@ class CategoryScreen extends StatelessWidget {
                     ),
                     itemCount: qtdItensNaGrade,
                     itemBuilder: (context, index) {
-                      ProductData data = ProductData.fromDocument(snapshot.data!.docs[index]);
-                      data.category = this.snapshot.id;
+                      ProductData data =
+                          ProductData.fromDocument(snapshot.data!.docs[index]);
+                      data.category = this.categoria.id;
                       return ProductTile(
                         "grid",
                         data,
@@ -77,12 +79,12 @@ class CategoryScreen extends StatelessWidget {
                     },
                   ),
                   ListView.builder(
-                      padding: EdgeInsets.all(4.0),
+                      padding: const EdgeInsets.all(4.0),
                       itemCount: qtdItensNaGrade,
                       itemBuilder: (context, index) {
-
-                        ProductData data = ProductData.fromDocument(snapshot.data!.docs[index]);
-                        data.category = this.snapshot.id;
+                        ProductData data = ProductData.fromDocument(
+                            snapshot.data!.docs[index]);
+                        data.category = this.categoria.id;
                         return ProductTile(
                           "list",
                           data,
