@@ -26,7 +26,11 @@ class HomeScreen extends StatelessWidget {
         ),
         Scaffold(
           appBar: AppBar(
-            title: const Text("Produtos"),
+            iconTheme: IconThemeData(color: Colors.white),
+            title: const Text(
+              "Produtos",
+              style: TextStyle(color: Colors.white),
+            ),
             centerTitle: true,
             backgroundColor: Theme.of(context).primaryColor,
           ),
@@ -36,6 +40,7 @@ class HomeScreen extends StatelessWidget {
         ),
         Scaffold(
           appBar: AppBar(
+            iconTheme: const IconThemeData(color: Colors.white),
             backgroundColor: Theme.of(context).primaryColor,
             title: const Text(
               "Lojas",
@@ -48,6 +53,7 @@ class HomeScreen extends StatelessWidget {
         ),
         Scaffold(
           appBar: AppBar(
+            iconTheme: const IconThemeData(color: Colors.white),
             backgroundColor: Theme.of(context).primaryColor,
             title: const Text(
               "Meus Pedidos",

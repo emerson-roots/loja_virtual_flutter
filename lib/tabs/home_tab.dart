@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:loja_virtual/datas/novidade.dart';
+import 'package:loja_virtual/interfaces/http_service.dart';
+import 'package:loja_virtual/services/firebase_db_impl.dart';
+import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class HomeTab extends StatelessWidget {
@@ -8,6 +12,9 @@ class HomeTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // injeção de dependencia com provider: ^6.0.0
+    final _httpService = Provider.of<IHttpService>(context);
+
     // renderiza o gradiente de cor de fundo
     Widget _buildBodyBack() => Container(
           decoration: const BoxDecoration(
@@ -28,20 +35,18 @@ class HomeTab extends StatelessWidget {
         CustomScrollView(
           slivers: [
             const SliverAppBar(
+              iconTheme: IconThemeData(color: Colors.white),
               floating: true,
               snap: true,
               backgroundColor: Colors.transparent,
               elevation: 0.0,
               flexibleSpace: FlexibleSpaceBar(
-                title: Text('Novidades'),
+                title: Text('Novidades', style: TextStyle(color: Colors.white),),
                 centerTitle: true,
               ),
             ),
-            FutureBuilder<QuerySnapshot>(
-              future: FirebaseFirestore.instance
-                  .collection('home')
-                  .orderBy('pos')
-                  .get(),
+            FutureBuilder<List<Novidade>>(
+              future: _httpService.getNovidades(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return SliverToBoxAdapter(
@@ -54,7 +59,6 @@ class HomeTab extends StatelessWidget {
                     ),
                   );
                 } else {
-                  print(snapshot.data!.docs.length);
                   return SliverGrid(
                     //gridDelegate controla o tamanho e a posição
                     gridDelegate: SliverQuiltedGridDelegate(
@@ -62,15 +66,15 @@ class HomeTab extends StatelessWidget {
                       mainAxisSpacing: 1,
                       crossAxisSpacing: 1,
                       repeatPattern: QuiltedGridRepeatPattern.inverted,
-                      pattern: snapshot.data!.docs.map((doc) {
-                        return QuiltedGridTile(doc.get('x'), doc.get('y'));
+                      pattern: snapshot.data!.map((doc) {
+                        return QuiltedGridTile(doc.x, doc.y);
                       }).toList(),
                     ),
                     delegate: SliverChildBuilderDelegate(
-                      childCount: snapshot.data!.docs.length,
+                      childCount: snapshot.data!.length,
                       (context, index) => FadeInImage.memoryNetwork(
                         placeholder: kTransparentImage,
-                        image: snapshot.data!.docs[index]['image'],
+                        image: snapshot.data![index].image,
                         fit: BoxFit.cover,
                       ),
                     ),
