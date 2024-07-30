@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/datas/Produto.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
 import 'package:loja_virtual/models/cart_model.dart';
 import 'package:loja_virtual/models/user_model.dart';
@@ -8,7 +9,7 @@ import 'package:loja_virtual/screens/login_screen.dart';
 import '../datas/product_data.dart';
 
 class ProductScreen extends StatefulWidget {
-  final ProductData product;
+  final Produto product;
 
   ProductScreen(this.product);
 
@@ -17,7 +18,7 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-  final ProductData product;
+  final Produto product;
   int _current = 0;
   String? sizeSelecionado;
   final CarouselController _controller = CarouselController();

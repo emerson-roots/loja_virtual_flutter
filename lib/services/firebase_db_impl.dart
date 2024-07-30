@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:loja_virtual/datas/Produto.dart';
 import 'package:loja_virtual/datas/categoria.dart';
 import 'package:loja_virtual/datas/novidade.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
@@ -37,5 +38,26 @@ class FirebaseDbimpl extends IHttpService {
     }).toList();
 
     return categorias;
+  }
+
+  @override
+  Future<List<Produto>> getProdutosByCategoriaId(String id) async {
+    try {
+      Query<Map<String, dynamic>> refObj = FirebaseFirestore.instance
+          .collection('products')
+          .doc(id)
+          .collection('items');
+
+      QuerySnapshot querySnapshot = await refObj.get();
+
+      List<Produto> list = querySnapshot.docs.map((doc) {
+        return Produto.fromDocument(doc);
+      }).toList();
+
+      return list;
+    } catch (e) {
+      print('---------> Ocorreu um erro no getProdutosByCategoriaId: $e');
+      throw e;
+    }
   }
 }

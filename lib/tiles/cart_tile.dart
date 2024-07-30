@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/datas/Produto.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
 import 'package:loja_virtual/datas/product_data.dart';
 import 'package:loja_virtual/models/cart_model.dart';
@@ -107,7 +108,7 @@ class CartTile extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   cartProduct.productData =
-                      ProductData.fromDocument(snapshot.data!);
+                      Produto.fromDocument(snapshot.data!);
                   return _buildContent();
                 } else {
                   return CustomActivityIndicator();

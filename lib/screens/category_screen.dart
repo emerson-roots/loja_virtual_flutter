@@ -1,6 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/datas/Produto.dart';
 import 'package:loja_virtual/datas/categoria.dart';
+import 'package:loja_virtual/interfaces/http_service.dart';
+import 'package:provider/provider.dart';
 
 import '../datas/product_data.dart';
 import '../tiles/product_tile.dart';
@@ -15,10 +17,12 @@ class CategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _httpService = Provider.of<IHttpService>(context);
     return DefaultTabController(
       length: qtdTabs,
       child: Scaffold(
         appBar: AppBar(
+          iconTheme: const IconThemeData(color: Colors.white),
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             categoria.title,
@@ -42,19 +46,15 @@ class CategoryScreen extends StatelessWidget {
             ],
           ),
         ),
-        body: FutureBuilder<QuerySnapshot>(
-          future: FirebaseFirestore.instance
-              .collection('products')
-              .doc(categoria.id)
-              .collection('items')
-              .get(),
+        body: FutureBuilder<List<Produto>>(
+          future: _httpService.getProdutosByCategoriaId(categoria.id),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
             } else {
-              int qtdItensNaGrade = snapshot.data!.docs.length;
+              int qtdItensNaGrade = snapshot.data!.length;
 
               return TabBarView(
                 physics: const NeverScrollableScrollPhysics(),
@@ -69,8 +69,7 @@ class CategoryScreen extends StatelessWidget {
                     ),
                     itemCount: qtdItensNaGrade,
                     itemBuilder: (context, index) {
-                      ProductData data =
-                          ProductData.fromDocument(snapshot.data!.docs[index]);
+                      Produto data = snapshot.data![index];
                       data.category = this.categoria.id;
                       return ProductTile(
                         "grid",
@@ -82,8 +81,7 @@ class CategoryScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(4.0),
                       itemCount: qtdItensNaGrade,
                       itemBuilder: (context, index) {
-                        ProductData data = ProductData.fromDocument(
-                            snapshot.data!.docs[index]);
+                        Produto data = snapshot.data![index];
                         data.category = this.categoria.id;
                         return ProductTile(
                           "list",
