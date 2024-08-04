@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:loja_virtual/datas/Produto.dart';
 import 'package:loja_virtual/datas/categoria.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:provider/provider.dart';
-
-import '../datas/product_data.dart';
 import '../tiles/product_tile.dart';
 
 class CategoryScreen extends StatelessWidget {
   final Categoria categoria;
+  late IHttpService _httpService;
 
   CategoryScreen(this.categoria);
 
@@ -17,7 +17,7 @@ class CategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _httpService = Provider.of<IHttpService>(context);
+    _httpService = GetIt.instance<IHttpService>();
     return DefaultTabController(
       length: qtdTabs,
       child: Scaffold(

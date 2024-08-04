@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:get_it/get_it.dart';
 import 'package:loja_virtual/datas/novidade.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/services/firebase_db_impl.dart';
@@ -8,12 +9,14 @@ import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class HomeTab extends StatelessWidget {
-  const HomeTab({Key? key}) : super(key: key);
+  late IHttpService _httpService;
+
+  HomeTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // injeção de dependencia com provider: ^6.0.0
-    final _httpService = Provider.of<IHttpService>(context);
+    _httpService = GetIt.instance<IHttpService>();
 
     // renderiza o gradiente de cor de fundo
     Widget _buildBodyBack() => Container(

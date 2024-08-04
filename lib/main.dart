@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/models/cart_model.dart';
 import 'package:loja_virtual/screens/home_screen.dart';
@@ -11,17 +12,24 @@ import 'models/user_model.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  registraDependencias();
   runApp(
     // MultiProvider necessário para injeção de dependencia
     // requer lib provider: ^6.0.0
     MultiProvider(
       providers: [
         // dependencias
-        Provider<IHttpService>(create: (_) => FirebaseDbimpl()),
+        Provider<IHttpService>(
+          create: (_) => GetIt.instance<IHttpService>(),
+        ),
       ],
       child: MyApp(),
     ),
   );
+}
+
+void registraDependencias() {
+  GetIt.instance.registerLazySingleton<IHttpService>(() => FirebaseDbimpl());
 }
 
 class MyApp extends StatelessWidget {

@@ -45,6 +45,7 @@ dependencies:
   url_launcher: ^6.1.6
   carousel_slider: ^4.1.1
   provider: ^6.0.0
+  get_it: ^7.2.0
 
 dev_dependencies:
   flutter_test:

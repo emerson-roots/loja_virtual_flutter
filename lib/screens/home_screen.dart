@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       children: [
         Scaffold(
-          body: const HomeTab(),
+          body: HomeTab(),
           drawer: CustomDrawer(_pageController),
           floatingActionButton: CartButtonCustomizado(true),
         ),

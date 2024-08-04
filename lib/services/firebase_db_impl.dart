@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loja_virtual/datas/Produto.dart';
+import 'package:loja_virtual/datas/cart_product.dart';
 import 'package:loja_virtual/datas/categoria.dart';
 import 'package:loja_virtual/datas/novidade.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
@@ -59,5 +60,17 @@ class FirebaseDbimpl extends IHttpService {
       print('---------> Ocorreu um erro no getProdutosByCategoriaId: $e');
       throw e;
     }
+  }
+
+  @override
+  addCartItem(CartProduct cartProduct, String userId) {
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("cart")
+        .add(cartProduct.toMap())
+        .then((docReferencia) {
+      cartProduct.cid = docReferencia.id;
+    });
   }
 }

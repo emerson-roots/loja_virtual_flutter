@@ -6,7 +6,6 @@ import 'package:loja_virtual/models/cart_model.dart';
 import 'package:loja_virtual/models/user_model.dart';
 import 'package:loja_virtual/screens/cart_screen.dart';
 import 'package:loja_virtual/screens/login_screen.dart';
-import '../datas/product_data.dart';
 
 class ProductScreen extends StatefulWidget {
   final Produto product;

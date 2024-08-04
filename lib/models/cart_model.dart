@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get_it/get_it.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
+import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/models/user_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -13,7 +15,12 @@ class CartModel extends Model {
   String? couponCode;
   int discountPercentage = 0;
 
+  late IHttpService _httpService;
+
+
   CartModel(this.user) {
+    _httpService = GetIt.instance<IHttpService>();
+
     if (user.isLoggedIn()) {
       _loadCartItems();
     }
@@ -24,17 +31,8 @@ class CartModel extends Model {
   }
 
   void addCartItem(CartProduct cartProduct) {
+    _httpService.addCartItem(cartProduct, user.firebaseUser!.uid);
     products.add(cartProduct);
-
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.firebaseUser!.uid)
-        .collection("cart")
-        .add(cartProduct.toMap())
-        .then((docReferencia) {
-      cartProduct.cid = docReferencia.id;
-    });
-
     notifyListeners();
   }
 
