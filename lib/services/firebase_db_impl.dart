@@ -73,4 +73,34 @@ class FirebaseDbimpl extends IHttpService {
       cartProduct.cid = docReferencia.id;
     });
   }
+
+  @override
+  removeCartItem(CartProduct cartProduct, String userId) {
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("cart")
+        .doc(cartProduct.cid)
+        .delete();
+  }
+
+  @override
+  incrementProduct(CartProduct cartProduct, String userId) {
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("cart")
+        .doc(cartProduct.cid)
+        .update(cartProduct.toMap());
+  }
+
+  @override
+  decrementProduct(CartProduct cartProduct, String userId) {
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("cart")
+        .doc(cartProduct.cid)
+        .update(cartProduct.toMap());
+  }
 }

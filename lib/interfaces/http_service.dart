@@ -7,5 +7,10 @@ abstract class IHttpService {
   Future<List<Novidade>> getNovidades();
   Future<List<Categoria>> getAllCategorias();
   Future<List<Produto>> getProdutosByCategoriaId(String id);
+
+  // cart model
   addCartItem(CartProduct cartProduct, String userId);
+  removeCartItem(CartProduct cartProduct, String userId);
+  decrementProduct(CartProduct cartProduct, String userId);
+  incrementProduct(CartProduct cartProduct, String userId);
 }

@@ -17,7 +17,6 @@ class CartModel extends Model {
 
   late IHttpService _httpService;
 
-
   CartModel(this.user) {
     _httpService = GetIt.instance<IHttpService>();
 
@@ -37,41 +36,20 @@ class CartModel extends Model {
   }
 
   void removeCartItem(CartProduct cartProduct) {
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.firebaseUser!.uid)
-        .collection("cart")
-        .doc(cartProduct.cid)
-        .delete();
-
+    _httpService.removeCartItem(cartProduct, user.firebaseUser!.uid);
     products.remove(cartProduct);
-
     notifyListeners();
   }
 
   void decrementProduct(CartProduct cartProduct) {
     cartProduct.quantity = cartProduct.quantity! - 1;
-
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.firebaseUser!.uid)
-        .collection("cart")
-        .doc(cartProduct.cid)
-        .update(cartProduct.toMap());
-
+    _httpService.decrementProduct(cartProduct, user.firebaseUser!.uid);
     notifyListeners();
   }
 
   void incrementProduct(CartProduct cartProduct) {
     cartProduct.quantity = cartProduct.quantity! + 1;
-
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.firebaseUser!.uid)
-        .collection("cart")
-        .doc(cartProduct.cid)
-        .update(cartProduct.toMap());
-
+    _httpService.incrementProduct(cartProduct, user.firebaseUser!.uid);
     notifyListeners();
   }
 
