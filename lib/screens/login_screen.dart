@@ -25,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text(
           "Entrar",
@@ -125,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               mensagem: "Insira seu e-mail para recuperação.",
                               corSnackBar: Colors.redAccent,
                               tempoDuracaoMensagem: 3);
-                        } else{
+                        } else {
                           model.recoverPass(_emailController.text);
 
                           _showSnackBarMessage(
@@ -186,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => HomeScreen()),
-            (route) => false, // Remove todas as rotas anteriores.
+        (route) => false, // Remove todas as rotas anteriores.
       );
     }
   }
@@ -197,7 +198,6 @@ class _LoginScreenState extends State<LoginScreen> {
         corSnackBar: Colors.redAccent,
         tempoDuracaoMensagem: 4);
 
-
     return exMessage;
   }
 
@@ -206,8 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
     required Color corSnackBar,
     required int tempoDuracaoMensagem,
   }) {
-    var snackBar =  SnackBar(
-
+    var snackBar = SnackBar(
       content: Text(mensagem),
       backgroundColor: corSnackBar,
       duration: Duration(seconds: tempoDuracaoMensagem),

@@ -31,6 +31,7 @@ class _ProductScreenState extends State<ProductScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryColor,
+        iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           product.title!,
           style: const TextStyle(

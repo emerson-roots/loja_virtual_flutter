@@ -23,10 +23,31 @@ class OrdersTab extends StatelessWidget {
             if (!snapshot.hasData) {
               return CustomActivityIndicator();
             } else {
+              var orders = snapshot.data!.docs
+                  .map((doc) => OrderTile(doc.id))
+                  .toList()
+                  .reversed
+                  .toList();
+
+              if (orders.isNotEmpty) {
+                return ListView(
+                  children: orders,
+                );
+              } else {
+                return const Center(
+                  child: Text(
+                    'Você não possui nenhum pedido.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24.0
+                    ),
+                  ),
+                );
+              }
+
               return ListView(
-                children: snapshot.data!.docs
-                    .map((doc) => OrderTile(doc.id))
-                    .toList().reversed.toList(),
+                children: orders,
               );
             }
           });

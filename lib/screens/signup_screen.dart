@@ -15,12 +15,13 @@ class _SignupScreenState extends State<SignupScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
-  final _addressController = TextEditingController();
+  //final _addressController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text(
           "Criar Conta",
@@ -99,7 +100,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     },
                   ),
                   const SizedBox(height: 16.0),
-                  TextFormField(
+                  /*TextFormField(
                     controller: _addressController,
                     decoration: const InputDecoration(hintText: "Endereço"),
                     validator: (text) {
@@ -107,7 +108,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         return "Campo obrigatório.";
                       }
                     },
-                  ),
+                  ),*/
                   const SizedBox(height: 16.0),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -124,7 +125,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         Map<String, dynamic> userData = {
                           "name": _nameController.text,
                           "email": _emailController.text,
-                          "address": _addressController.text
+                          //"address": _addressController.text
                         };
 
                         var isContaCriadaComSucesso = model.signUp(
@@ -161,7 +162,7 @@ class _SignupScreenState extends State<SignupScreen> {
     _nameController.clear();
     _emailController.clear();
     _passController.clear();
-    _addressController.clear();
+    //_addressController.clear();
   }
 
   void _onSuccess() {

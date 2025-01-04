@@ -32,8 +32,12 @@ class HomeTab extends StatelessWidget {
               snap: true,
               backgroundColor: Colors.transparent,
               elevation: 0.0,
+              iconTheme: IconThemeData(color: Colors.white),
               flexibleSpace: FlexibleSpaceBar(
-                title: Text('Novidades'),
+                title: Text(
+                  'Novidades',
+                  style: TextStyle(color: Colors.white),
+                ),
                 centerTitle: true,
               ),
             ),

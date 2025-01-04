@@ -18,6 +18,7 @@ class CategoryScreen extends StatelessWidget {
       length: qtdTabs,
       child: Scaffold(
         appBar: AppBar(
+          iconTheme: const IconThemeData(color: Colors.white),
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             snapshot.get('title'),
@@ -49,47 +50,56 @@ class CategoryScreen extends StatelessWidget {
               .get(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             } else {
               int qtdItensNaGrade = snapshot.data!.docs.length;
-
-              return TabBarView(
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  GridView.builder(
-                    padding: EdgeInsets.all(4.0),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: maximoItensNaHorizontal,
-                      mainAxisSpacing: 4.0,
-                      crossAxisSpacing: 4.0,
-                      childAspectRatio: 0.65,
-                    ),
-                    itemCount: qtdItensNaGrade,
-                    itemBuilder: (context, index) {
-                      ProductData data = ProductData.fromDocument(snapshot.data!.docs[index]);
-                      data.category = this.snapshot.id;
-                      return ProductTile(
-                        "grid",
-                        data,
-                      );
-                    },
+              if (qtdItensNaGrade <= 0) {
+                return const Center(
+                  child: Text(
+                    'Nenhum item cadastrado para a categoria de produtos selecionada...',
+                    textAlign: TextAlign.center,
                   ),
-                  ListView.builder(
+                );
+              } else {
+                return TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    GridView.builder(
                       padding: EdgeInsets.all(4.0),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: maximoItensNaHorizontal,
+                        mainAxisSpacing: 4.0,
+                        crossAxisSpacing: 4.0,
+                        childAspectRatio: 0.65,
+                      ),
                       itemCount: qtdItensNaGrade,
                       itemBuilder: (context, index) {
-
-                        ProductData data = ProductData.fromDocument(snapshot.data!.docs[index]);
+                        ProductData data = ProductData.fromDocument(
+                            snapshot.data!.docs[index]);
                         data.category = this.snapshot.id;
                         return ProductTile(
-                          "list",
+                          "grid",
                           data,
                         );
-                      })
-                ],
-              );
+                      },
+                    ),
+                    ListView.builder(
+                        padding: EdgeInsets.all(4.0),
+                        itemCount: qtdItensNaGrade,
+                        itemBuilder: (context, index) {
+                          ProductData data = ProductData.fromDocument(
+                              snapshot.data!.docs[index]);
+                          data.category = this.snapshot.id;
+                          return ProductTile(
+                            "list",
+                            data,
+                          );
+                        })
+                  ],
+                );
+              }
             }
           },
         ),

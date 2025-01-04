@@ -16,6 +16,7 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         centerTitle: true,
         title: const Text(
@@ -100,21 +101,17 @@ class CartScreen extends StatelessWidget {
             return ListView(
               children: [
                 Column(
-                  children:
-                   model.products.map(
-                       (produto){
-                         return CartTile(produto);
-                       }
-                   ).toList(),
+                  children: model.products.map((produto) {
+                    return CartTile(produto);
+                  }).toList(),
                 ),
                 DiscountCard(),
                 ShipCard(),
                 CartPrice(() async {
                   var orderId = await model.finishOrder();
                   if (!orderId!.isEmpty) {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => OrderScreen(orderId))
-                      );
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => OrderScreen(orderId)));
                   }
                 })
               ],
