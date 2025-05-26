@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/models/user_model.dart';
 import 'package:loja_virtual/screens/home_screen.dart';
+import 'package:loja_virtual/widgets/custom_activity_indicator.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -34,26 +35,7 @@ class _SignupScreenState extends State<SignupScreen> {
       body: ScopedModelDescendant<UserModel>(
         builder: (context, child, model) {
           if (model.isLoading) {
-            return Container(
-              color: Colors.black.withOpacity(0.1),
-              child: const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(
-                      color: Colors.black,
-                    ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    Text(
-                      "Carregando...",
-                      style: TextStyle(color: Colors.black),
-                    )
-                  ],
-                ),
-              ),
-            );
+            return CustomActivityIndicator();
           } else {
             return Form(
               key: _formKey,

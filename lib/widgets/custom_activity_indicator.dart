@@ -7,10 +7,10 @@ class CustomActivityIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.black.withOpacity(0.1),
-      child: const Center(
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             CircularProgressIndicator(
               color: Colors.black,
             ),

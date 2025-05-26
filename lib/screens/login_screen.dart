@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/screens/home_screen.dart';
 import 'package:loja_virtual/screens/signup_screen.dart';
+import 'package:loja_virtual/utils/internet_check.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../models/user_model.dart';
@@ -60,10 +61,10 @@ class _LoginScreenState extends State<LoginScreen> {
           if (model.isLoading) {
             return Container(
               color: Colors.black.withOpacity(0.1),
-              child: const Center(
+              child:  Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     CircularProgressIndicator(
                       color: Colors.black,
                     ),
@@ -152,17 +153,27 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(3.0),
                             ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       /*if (_formKey.currentState!.validate()) {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => HomeScreen()));
                     }*/
+                      var isPossuiInternet =
+                          await InternetCheck.checkInternetConnection();
 
-                      model.signIn(
-                          email: _emailController.text,
-                          pass: _passwordController.text,
-                          onSuccess: _onSuccess,
-                          onFail: _onFail);
+                      if (isPossuiInternet) {
+                        model.signIn(
+                            email: _emailController.text,
+                            pass: _passwordController.text,
+                            onSuccess: _onSuccess,
+                            onFail: _onFail);
+                      } else {
+                        _showSnackBarMessage(
+                            mensagem:
+                                'Sem conexão com internet ou conexão inválida!',
+                            corSnackBar: Colors.redAccent,
+                            tempoDuracaoMensagem: 4);
+                      }
                     },
                     child: const Text(
                       "ENTRAR",
