@@ -4,6 +4,10 @@ A new Flutter project.
 
 ## Getting Started
 
+- desenvolvido com:
+  - flutter version 3.3.10;
+  - dart 2.18.6
+
 This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:

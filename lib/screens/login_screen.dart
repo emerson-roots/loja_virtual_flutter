@@ -59,10 +59,10 @@ class _LoginScreenState extends State<LoginScreen> {
           if (model.isLoading) {
             return Container(
               color: Colors.black.withOpacity(0.1),
-              child: const Center(
+              child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     CircularProgressIndicator(
                       color: Colors.black,
                     ),
@@ -181,7 +181,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onSuccess() {
-    Navigator.of(context).pop();
+    if (Navigator.canPop(context)) {
+      Navigator.of(context).pop();
+    } else {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+            (route) => false, // Remove todas as rotas anteriores.
+      );
+    }
   }
 
   String _onFail(String exMessage) {

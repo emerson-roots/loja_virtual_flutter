@@ -35,10 +35,10 @@ class _SignupScreenState extends State<SignupScreen> {
           if (model.isLoading) {
             return Container(
               color: Colors.black.withOpacity(0.1),
-              child: const Center(
+              child:  Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     CircularProgressIndicator(
                       color: Colors.black,
                     ),
