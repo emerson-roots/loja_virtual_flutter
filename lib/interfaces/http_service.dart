@@ -2,6 +2,7 @@ import 'package:loja_virtual/datas/Produto.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
 import 'package:loja_virtual/datas/categoria.dart';
 import 'package:loja_virtual/datas/novidade.dart';
+import 'package:loja_virtual/datas/order.dart';
 
 abstract class IHttpService {
   Future<List<Novidade>> getNovidades();
@@ -14,4 +15,8 @@ abstract class IHttpService {
   decrementProduct(CartProduct cartProduct, String userId);
   incrementProduct(CartProduct cartProduct, String userId);
   Future<List<CartProduct>> loadCartItems(String userId);
+
+  // Pedidos/Orders
+  Future<OrderModel> getPedidosById(String orderId);
+
 }

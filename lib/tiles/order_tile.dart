@@ -1,31 +1,29 @@
-import 'dart:collection';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:loja_virtual/datas/order.dart';
+import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/widgets/custom_activity_indicator.dart';
 
 class OrderTile extends StatelessWidget {
   final String orderId;
+  late IHttpService _httpService;
 
-  OrderTile(this.orderId);
+  OrderTile(this.orderId, {super.key});
 
   @override
   Widget build(BuildContext context) {
+    _httpService = GetIt.instance<IHttpService>();
+
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: StreamBuilder<DocumentSnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection("orders")
-              .doc(orderId)
-              .snapshots(),
+        child: FutureBuilder<OrderModel>(
+          future: _httpService.getPedidosById(orderId),
           builder: (context, snapshot) {
-            int status =
-                snapshot.hasData && snapshot.data!.get("status") != null
-                    ? snapshot.data!.get("status")
-                    : 1;
-
+            int status = snapshot.hasData && snapshot.data!.status != null
+                ? snapshot.data!.status
+                : 1;
             if (!snapshot.hasData) {
               return CustomActivityIndicator();
             } else {
@@ -39,11 +37,11 @@ class OrderTile extends StatelessWidget {
                   const SizedBox(
                     height: 4.0,
                   ),
-                  Text(_buildProductsText(snapshot!.data!)),
+                  Text(_buildProductsText(snapshot.data!)),
                   const SizedBox(
                     height: 4.0,
                   ),
-                  Text(
+                  const Text(
                     "Status do Pedido:",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
@@ -77,14 +75,14 @@ class OrderTile extends StatelessWidget {
     );
   }
 
-  String _buildProductsText(DocumentSnapshot snapshot) {
+  String _buildProductsText(OrderModel obj) {
     String text = "Descrição:\n";
-    for (LinkedHashMap p in snapshot.get("products")) {
+    for (var p in obj.products) {
       text +=
-          "${p["quantity"]} x ${p["product"]["title"]} (R\$ ${p["product"]["price"].toStringAsFixed(2)})\n";
+          "${p.quantity} x ${p.product.title} (R\$ ${p.product.price!.toStringAsFixed(2)})\n";
     }
 
-    text += "Total: R\$ ${snapshot.get("totalPrice").toStringAsFixed(2)}";
+    text += "Total: R\$ ${obj.totalPrice.toStringAsFixed(2)}";
     return text;
   }
 

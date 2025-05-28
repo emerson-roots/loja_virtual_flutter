@@ -3,6 +3,7 @@ import 'package:loja_virtual/datas/Produto.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
 import 'package:loja_virtual/datas/categoria.dart';
 import 'package:loja_virtual/datas/novidade.dart';
+import 'package:loja_virtual/datas/order.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
 
 class FirebaseDbimpl extends IHttpService {
@@ -106,7 +107,6 @@ class FirebaseDbimpl extends IHttpService {
 
   @override
   Future<List<CartProduct>> loadCartItems(String userId) async {
-
     QuerySnapshot query = await FirebaseFirestore.instance
         .collection("users")
         .doc(userId)
@@ -114,5 +114,16 @@ class FirebaseDbimpl extends IHttpService {
         .get();
 
     return query.docs.map((doc) => CartProduct.fromDocument(doc)).toList();
+  }
+
+  @override
+  Future<OrderModel> getPedidosById(String orderId) async {
+    var resultSnapshot = await FirebaseFirestore.instance
+        .collection("orders")
+        .doc(orderId)
+        .get();
+
+    OrderModel obj = OrderModel.fromDocument(resultSnapshot);
+    return obj;
   }
 }

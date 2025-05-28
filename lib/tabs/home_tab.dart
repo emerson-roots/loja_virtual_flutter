@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_it/get_it.dart';
 import 'package:loja_virtual/datas/novidade.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
-import 'package:loja_virtual/services/firebase_db_impl.dart';
-import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class HomeTab extends StatelessWidget {
@@ -44,7 +41,10 @@ class HomeTab extends StatelessWidget {
               backgroundColor: Colors.transparent,
               elevation: 0.0,
               flexibleSpace: FlexibleSpaceBar(
-                title: Text('Novidades', style: TextStyle(color: Colors.white),),
+                title: Text(
+                  'Novidades',
+                  style: TextStyle(color: Colors.white),
+                ),
                 centerTitle: true,
               ),
             ),
