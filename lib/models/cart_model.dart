@@ -54,7 +54,7 @@ class CartModel extends Model {
   }
 
   void _loadCartItems() async {
-    products = await _httpService.loadCartItems(user.firebaseUser!.uid);
+    products = await _httpService.loadCartItemsByUserId(user.firebaseUser!.uid);
     notifyListeners();
   }
 

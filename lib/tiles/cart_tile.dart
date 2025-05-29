@@ -1,11 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:loja_virtual/datas/Produto.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
-import 'package:loja_virtual/datas/product_data.dart';
 import 'package:loja_virtual/models/cart_model.dart';
-
-import '../widgets/custom_activity_indicator.dart';
 
 class CartTile extends StatelessWidget {
   final CartProduct cartProduct;
@@ -14,9 +9,9 @@ class CartTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget _buildContent() {
-
-      CartModel.of(context).updatePrices();
+    Widget buildContent() {
+      /// 29/05/2025 - comentado pois estava sendo chamado em LOOP;
+      // CartModel.of(context).updatePrices();
       return Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -97,24 +92,7 @@ class CartTile extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: cartProduct.productData == null
-          ? FutureBuilder<DocumentSnapshot>(
-              future: FirebaseFirestore.instance
-                  .collection("products")
-                  .doc(cartProduct.category)
-                  .collection("items")
-                  .doc(cartProduct.pid)
-                  .get(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  cartProduct.productData =
-                      Produto.fromDocument(snapshot.data!);
-                  return _buildContent();
-                } else {
-                  return CustomActivityIndicator();
-                }
-              })
-          : _buildContent(),
+      child: buildContent(),
     );
   }
 }

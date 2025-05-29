@@ -106,14 +106,31 @@ class FirebaseDbimpl extends IHttpService {
   }
 
   @override
-  Future<List<CartProduct>> loadCartItems(String userId) async {
-    QuerySnapshot query = await FirebaseFirestore.instance
+  Future<List<CartProduct>> loadCartItemsByUserId(String userId) async {
+    QuerySnapshot<Map<String, dynamic>> carrinhos = await FirebaseFirestore
+        .instance
         .collection("users")
         .doc(userId)
         .collection("cart")
         .get();
 
-    return query.docs.map((doc) => CartProduct.fromDocument(doc)).toList();
+    List<CartProduct> result =
+        carrinhos.docs.map((e) => CartProduct.fromDocument(e)).toList();
+
+    result.forEach((cartProduct) async {
+      if (cartProduct.productData == null) {
+        DocumentSnapshot<Map<String, dynamic>> produto = await FirebaseFirestore
+            .instance
+            .collection("products")
+            .doc(cartProduct.category)
+            .collection("items")
+            .doc(cartProduct.pid)
+            .get();
+
+        cartProduct.productData = Produto.fromDocument(produto);
+      }
+    });
+    return result;
   }
 
   @override

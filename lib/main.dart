@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:loja_virtual/helpers/console_helper.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/models/cart_model.dart';
 import 'package:loja_virtual/screens/home_screen.dart';
@@ -10,21 +14,41 @@ import 'package:scoped_model/scoped_model.dart';
 import 'models/user_model.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   registraDependencias();
-  runApp(
-    // MultiProvider necessário para injeção de dependencia
-    // requer lib provider: ^6.0.0
-    MultiProvider(
-      providers: [
-        // dependencias
-        Provider<IHttpService>(
-          create: (_) => GetIt.instance<IHttpService>(),
+
+  FlutterError.onError = (FlutterErrorDetails details) {
+    if (kDebugMode) {
+      // exibe no console
+      FlutterError.presentError(details);
+    }
+
+    ConsoleHelper.printError(
+      'Erro no Flutter capturado pelo handler global: ${details.exception}',
+    );
+  };
+
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      await Firebase.initializeApp();
+
+      runApp(
+        MultiProvider(
+          providers: [
+            // dependencias
+            Provider<IHttpService>(
+              create: (_) => GetIt.instance<IHttpService>(),
+            ),
+          ],
+          child: MyApp(),
         ),
-      ],
-      child: MyApp(),
-    ),
+      );
+    },
+    (error, stackTrace) {
+      ConsoleHelper.printError(
+        'Erro no Dart capturado pelo handler global: $error | StackTrace: $stackTrace',
+      );
+    },
   );
 }
 

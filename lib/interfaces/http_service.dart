@@ -14,7 +14,7 @@ abstract class IHttpService {
   removeCartItem(CartProduct cartProduct, String userId);
   decrementProduct(CartProduct cartProduct, String userId);
   incrementProduct(CartProduct cartProduct, String userId);
-  Future<List<CartProduct>> loadCartItems(String userId);
+  Future<List<CartProduct>> loadCartItemsByUserId(String userId);
 
   // Pedidos/Orders
   Future<OrderModel> getPedidosById(String orderId);

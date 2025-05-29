@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/helpers/console_helper.dart';
 import 'package:loja_virtual/models/user_model.dart';
 import 'package:loja_virtual/screens/login_screen.dart';
 import 'package:loja_virtual/screens/order_screen.dart';
@@ -14,6 +15,8 @@ import '../widgets/custom_activity_indicator.dart';
 class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    ConsoleHelper.printAlert(
+        '::: Melhorar logica da tela do carrinho. esta permitindo adicionar o mesmo produto em duplicidade.');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
@@ -25,7 +28,7 @@ class CartScreen extends StatelessWidget {
         actions: [
           Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.only(right: 8.0),
+            padding: const EdgeInsets.only(right: 8.0),
             child: ScopedModelDescendant<CartModel>(
               builder: (context, child, model) {
                 int qtdProdutos = model.products.length;
@@ -75,7 +78,7 @@ class CartScreen extends StatelessWidget {
                     ),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => LoginScreen()));
+                          builder: (context) => const LoginScreen()));
                     },
                     child: const Text(
                       "Entrar",
@@ -100,21 +103,17 @@ class CartScreen extends StatelessWidget {
             return ListView(
               children: [
                 Column(
-                  children:
-                   model.products.map(
-                       (produto){
-                         return CartTile(produto);
-                       }
-                   ).toList(),
+                  children: model.products.map((produto) {
+                    return CartTile(produto);
+                  }).toList(),
                 ),
                 DiscountCard(),
                 ShipCard(),
                 CartPrice(() async {
                   var orderId = await model.finishOrder();
                   if (!orderId!.isEmpty) {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => OrderScreen(orderId))
-                      );
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => OrderScreen(orderId)));
                   }
                 })
               ],
