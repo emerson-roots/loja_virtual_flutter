@@ -1,8 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/models/cart_model.dart';
 
 class DiscountCard extends StatelessWidget {
+  const DiscountCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     void _showSnackBarMessage({
@@ -40,25 +43,25 @@ class DiscountCard extends StatelessWidget {
         trailing: const Icon(Icons.add),
         children: [
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: TextFormField(
               decoration: const InputDecoration(
-                  border: OutlineInputBorder(), hintText: "Digite seu cupom"),
+                border: OutlineInputBorder(),
+                hintText: "Digite seu cupom",
+              ),
               initialValue: CartModel.of(context).couponCode ?? "",
-              onFieldSubmitted: (text) {
-                FirebaseFirestore.instance
-                    .collection("coupons")
-                    .doc(text)
-                    .get()
-                    .then((docSnap) {
-                  if (docSnap.data() != null) {
-                    int porcentagemCadastrada = docSnap.get('percent');
+              onFieldSubmitted: (text) async {
+                await GetIt.instance<IHttpService>()
+                    .getCupomDesconto(text)
+                    .then((cupom) {
+                  if (cupom != null && cupom.percent > 0) {
+                    int porcentagemCadastrada = cupom.percent;
                     CartModel.of(context)
                         .setCoupon(text, porcentagemCadastrada);
 
                     _showSnackBarMessage(
                         mensagem:
-                            "Desconto de ${porcentagemCadastrada}% aplicado!",
+                            "Desconto de $porcentagemCadastrada% aplicado!",
                         corSnackBar: Colors.green,
                         tempoDuracaoMensagem: 4);
                   } else {

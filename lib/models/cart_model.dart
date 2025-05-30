@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
+import 'package:loja_virtual/helpers/console_helper.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/models/user_model.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -61,6 +62,7 @@ class CartModel extends Model {
   void setCoupon(String? couponCode, int discountPercentage) {
     this.couponCode = couponCode;
     this.discountPercentage = discountPercentage;
+    notifyListeners();
   }
 
   double getProductsPrice() {
@@ -76,6 +78,7 @@ class CartModel extends Model {
   }
 
   double getShipPrice() {
+    ConsoleHelper.printAlert('::: getShipPrice -> FRETE está com valor fixado de 9.99. Melhorar lógica depois...');
     return 9.99;
   }
 

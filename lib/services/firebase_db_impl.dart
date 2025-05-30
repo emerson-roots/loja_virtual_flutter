@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loja_virtual/datas/Produto.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
 import 'package:loja_virtual/datas/categoria.dart';
+import 'package:loja_virtual/datas/cupom.dart';
 import 'package:loja_virtual/datas/novidade.dart';
 import 'package:loja_virtual/datas/order.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
@@ -142,5 +145,19 @@ class FirebaseDbimpl extends IHttpService {
 
     OrderModel obj = OrderModel.fromDocument(resultSnapshot);
     return obj;
+  }
+
+  @override
+  Future<Cupom> getCupomDesconto(String text) async {
+
+    var result = await FirebaseFirestore.instance
+        .collection("coupons")
+        .doc(text)
+        .get();
+
+    Map<String, dynamic>? data = result.data();
+    var cupom = data != null ? Cupom.fromJson(data) : Cupom.empty();
+
+    return cupom;
   }
 }

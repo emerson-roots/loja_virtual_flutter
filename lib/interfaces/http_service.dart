@@ -1,6 +1,7 @@
 import 'package:loja_virtual/datas/Produto.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
 import 'package:loja_virtual/datas/categoria.dart';
+import 'package:loja_virtual/datas/cupom.dart';
 import 'package:loja_virtual/datas/novidade.dart';
 import 'package:loja_virtual/datas/order.dart';
 
@@ -18,5 +19,6 @@ abstract class IHttpService {
 
   // Pedidos/Orders
   Future<OrderModel> getPedidosById(String orderId);
+  Future<Cupom> getCupomDesconto(String nomeCupom);
 
 }
