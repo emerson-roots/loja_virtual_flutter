@@ -19,7 +19,7 @@ abstract class IHttpService {
   Future<List<CartProduct>> loadCartItemsByUserId(String userId);
 
   // Pedidos/Orders
-  Future<OrderModel> getPedidosById(String orderId);
+  Future<List<OrderModel>> getPedidosByUserId(String userId);
   Future<Cupom> getCupomDesconto(String nomeCupom);
 
   // lojas

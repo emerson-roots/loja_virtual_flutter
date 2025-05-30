@@ -1,5 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:loja_virtual/datas/order.dart';
+import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/widgets/custom_activity_indicator.dart';
 
 import '../models/user_model.dart';
@@ -10,23 +12,22 @@ class OrdersTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (UserModel.of(context).isLoggedIn()) {
-      String uid = UserModel.of(context).firebaseUser!.uid!;
-      var pedidosUsuario = FirebaseFirestore.instance
-          .collection("users")
-          .doc(uid)
-          .collection("orders")
-          .get();
+      String uid = UserModel.of(context).firebaseUser!.uid;
+      Future<List<OrderModel>> pedidosUsuario =
+          GetIt.instance<IHttpService>().getPedidosByUserId(uid);
 
-      return FutureBuilder<QuerySnapshot>(
+      return FutureBuilder<List<OrderModel>>(
           future: pedidosUsuario,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return CustomActivityIndicator();
             } else {
               return ListView(
-                children: snapshot.data!.docs
-                    .map((doc) => OrderTile(doc.id))
-                    .toList().reversed.toList(),
+                children: snapshot.data!
+                    .map((doc) => OrderTile(doc))
+                    .toList()
+                    .reversed
+                    .toList(),
               );
             }
           });
@@ -62,7 +63,7 @@ class OrdersTab extends StatelessWidget {
               ),
               onPressed: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => LoginScreen()));
+                    MaterialPageRoute(builder: (context) => const LoginScreen()));
               },
               child: const Text(
                 "Entrar",

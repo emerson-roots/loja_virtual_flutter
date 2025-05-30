@@ -5,71 +5,58 @@ import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/widgets/custom_activity_indicator.dart';
 
 class OrderTile extends StatelessWidget {
-  final String orderId;
-  late IHttpService _httpService;
+  final OrderModel orderObj;
 
-  OrderTile(this.orderId, {super.key});
+  OrderTile(this.orderObj, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    _httpService = GetIt.instance<IHttpService>();
+    int status = orderObj.status ?? 1;
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: FutureBuilder<OrderModel>(
-          future: _httpService.getPedidosById(orderId),
-          builder: (context, snapshot) {
-            int status = snapshot.hasData && snapshot.data!.status != null
-                ? snapshot.data!.status
-                : 1;
-            if (!snapshot.hasData) {
-              return CustomActivityIndicator();
-            } else {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Código do pedido: ${snapshot.data!.id}",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 4.0,
-                  ),
-                  Text(_buildProductsText(snapshot.data!)),
-                  const SizedBox(
-                    height: 4.0,
-                  ),
-                  const Text(
-                    "Status do Pedido:",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 4.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      _buildCircle("1", "Preparação", status, 1),
-                      Container(
-                        height: 1.0,
-                        width: 40.0,
-                        color: Colors.grey.shade500,
-                      ),
-                      _buildCircle("2", "Transporte", status, 2),
-                      Container(
-                        height: 1.0,
-                        width: 40.0,
-                        color: Colors.grey.shade500,
-                      ),
-                      _buildCircle("3", "Entrega", status, 3),
-                    ],
-                  )
-                ],
-              );
-            }
-          },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Código do pedido: ${orderObj.id}",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 4.0,
+            ),
+            Text(_buildProductsText(orderObj)),
+            const SizedBox(
+              height: 4.0,
+            ),
+            const Text(
+              "Status do Pedido:",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 4.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                _buildCircle("1", "Preparação", status, 1),
+                Container(
+                  height: 1.0,
+                  width: 40.0,
+                  color: Colors.grey.shade500,
+                ),
+                _buildCircle("2", "Transporte", status, 2),
+                Container(
+                  height: 1.0,
+                  width: 40.0,
+                  color: Colors.grey.shade500,
+                ),
+                _buildCircle("3", "Entrega", status, 3),
+              ],
+            )
+          ],
         ),
       ),
     );

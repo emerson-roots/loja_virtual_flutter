@@ -46,6 +46,19 @@ class OrderModel {
     };
   }
 
+  factory OrderModel.empty() {
+    return OrderModel(
+      id: '',
+      clientId: '',
+      totalPrice: 0.0,
+      productsPrice: 0.0,
+      shipPrice: 0.0,
+      status: 0,
+      products: [],
+    );
+  }
+
+
   factory OrderModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
 

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loja_virtual/datas/Produto.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
@@ -138,17 +136,6 @@ class FirebaseDbimpl extends IHttpService {
   }
 
   @override
-  Future<OrderModel> getPedidosById(String orderId) async {
-    var resultSnapshot = await FirebaseFirestore.instance
-        .collection("orders")
-        .doc(orderId)
-        .get();
-
-    OrderModel obj = OrderModel.fromDocument(resultSnapshot);
-    return obj;
-  }
-
-  @override
   Future<Cupom> getCupomDesconto(String text) async {
     var result =
         await FirebaseFirestore.instance.collection("coupons").doc(text).get();
@@ -171,5 +158,30 @@ class FirebaseDbimpl extends IHttpService {
     }).toList();
 
     return listObj;
+  }
+
+  @override
+  Future<List<OrderModel>> getPedidosByUserId(String userId) async {
+    QuerySnapshot<Map<String, dynamic>> pedidosUsuario = await FirebaseFirestore
+        .instance
+        .collection("users")
+        .doc(userId)
+        .collection("orders")
+        .get();
+
+    var obj = await Future.wait(
+      pedidosUsuario.docs.map((order) async {
+        var resultSnapshot = await FirebaseFirestore.instance
+            .collection("orders")
+            .doc(order.id)
+            .get();
+
+        OrderModel orderMap = OrderModel.fromDocument(resultSnapshot);
+
+        return orderMap;
+      }).toList(),
+    );
+
+    return obj;
   }
 }
