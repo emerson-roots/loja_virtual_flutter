@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
@@ -78,7 +77,8 @@ class CartModel extends Model {
   }
 
   double getShipPrice() {
-    ConsoleHelper.printAlert('::: getShipPrice -> FRETE está com valor fixado de 9.99. Melhorar lógica depois...');
+    ConsoleHelper.printAlert(
+        '::: getShipPrice -> FRETE está com valor fixado de 9.99. Melhorar lógica depois...');
     return 9.99;
   }
 
@@ -100,35 +100,14 @@ class CartModel extends Model {
     double shipPrice = getShipPrice();
     double discount = getDiscount();
 
-    // salva o pedido no firebase
-    DocumentReference refOrderId =
-        await FirebaseFirestore.instance.collection("orders").add({
-      "clientId": user.firebaseUser!.uid,
-      "products": products.map((cartProduct) => cartProduct.toMap()).toList(),
-      "shipPrice": shipPrice,
-      "productsPrice": productsPrice,
-      "totalPrice": productsPrice - discount + shipPrice,
-      "status": 1
-    });
-
-    // seta/associa o id do pedido para o usuario
-    await FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.firebaseUser!.uid)
-        .collection("orders")
-        .doc(refOrderId.id)
-        .set({"orderId": refOrderId.id});
-
-    QuerySnapshot query = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.firebaseUser!.uid)
-        .collection("cart")
-        .get();
-
-    // remove produtos do carrinho
-    for (var doc in query.docs) {
-      doc.reference.delete();
-    }
+    // salva pedido no firebase
+    var idPedido = await _httpService.postFinalizarPedido(
+      products,
+      user.firebaseUser!.uid,
+      shipPrice,
+      productsPrice,
+      discount,
+    );
 
     // limpa o bound
     products.clear();
@@ -139,6 +118,6 @@ class CartModel extends Model {
     isLoading = false;
     notifyListeners();
 
-    return refOrderId.id;
+    return idPedido;
   }
 }

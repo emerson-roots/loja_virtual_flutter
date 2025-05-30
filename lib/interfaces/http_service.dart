@@ -21,6 +21,7 @@ abstract class IHttpService {
   // Pedidos/Orders
   Future<List<OrderModel>> getPedidosByUserId(String userId);
   Future<Cupom> getCupomDesconto(String nomeCupom);
+  Future<String> postFinalizarPedido(List<CartProduct> products, String userId, double valorFrete, double valorTotalProdutos, double valorDesconto);
 
   // lojas
   Future<List<Place>> getPlaces();

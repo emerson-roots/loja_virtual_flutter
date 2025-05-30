@@ -184,4 +184,46 @@ class FirebaseDbimpl extends IHttpService {
 
     return obj;
   }
+
+  @override
+  Future<String> postFinalizarPedido(
+    List<CartProduct> products,
+    String userId,
+    double valorFrete,
+    double valorTotalProdutos,
+    double valorDesconto,
+  ) async {
+    // salva o pedido no firebase
+    DocumentReference refOrderId =
+        await FirebaseFirestore.instance.collection("orders").add({
+      "clientId": userId,
+      "products": products.map((cartProduct) => cartProduct.toMap()).toList(),
+      "shipPrice": valorFrete,
+      "productsPrice": valorTotalProdutos,
+      "totalPrice": valorTotalProdutos - valorDesconto + valorFrete,
+      "status": 1
+    });
+
+    // seta/associa o id do pedido para o usuario
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("orders")
+        .doc(refOrderId.id)
+        .set({"orderId": refOrderId.id});
+
+    QuerySnapshot query = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .collection("cart")
+        .get();
+
+    // remove produtos do carrinho
+    for (var doc in query.docs) {
+      doc.reference.delete();
+    }
+
+    var idPedido = refOrderId.id;
+    return idPedido;
+  }
 }
