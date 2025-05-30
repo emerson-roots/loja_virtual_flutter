@@ -4,6 +4,7 @@ import 'package:loja_virtual/datas/categoria.dart';
 import 'package:loja_virtual/datas/cupom.dart';
 import 'package:loja_virtual/datas/novidade.dart';
 import 'package:loja_virtual/datas/order.dart';
+import 'package:loja_virtual/datas/place.dart';
 
 abstract class IHttpService {
   Future<List<Novidade>> getNovidades();
@@ -20,5 +21,8 @@ abstract class IHttpService {
   // Pedidos/Orders
   Future<OrderModel> getPedidosById(String orderId);
   Future<Cupom> getCupomDesconto(String nomeCupom);
+
+  // lojas
+  Future<List<Place>> getPlaces();
 
 }

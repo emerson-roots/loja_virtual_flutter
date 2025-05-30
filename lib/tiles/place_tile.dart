@@ -1,11 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/datas/place.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PlaceTile extends StatelessWidget {
-  final DocumentSnapshot snapshot;
+  // final DocumentSnapshot snapshot;
+  final Place place;
 
-  const PlaceTile(this.snapshot, {super.key});
+  const PlaceTile(this.place, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class PlaceTile extends StatelessWidget {
           SizedBox(
             height: 100.0,
             child: Image.network(
-              snapshot.get("image"),
+              place.image,
               fit: BoxFit.cover,
             ),
           ),
@@ -27,7 +28,7 @@ class PlaceTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  snapshot.get("title"),
+                  place.title,
                   textAlign: TextAlign.start,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
@@ -35,7 +36,7 @@ class PlaceTile extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  snapshot.get("address"),
+                  place.address,
                   textAlign: TextAlign.start,
                 )
               ],
@@ -53,8 +54,8 @@ class PlaceTile extends StatelessWidget {
                 ),
                 onPressed: () {
                   Uri uri = Uri.parse(
-                      "https://www.google.com/maps/search/?api=1&query=${snapshot.get("lat")},"
-                      "${snapshot.get("long")}");
+                      "https://www.google.com/maps/search/?api=1&query=${place.lat},"
+                      "${place.long}");
 
                   launchUrl(uri);
                 },
@@ -67,7 +68,7 @@ class PlaceTile extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  launchUrl(Uri.parse("tel:${snapshot.get("phone")}"));
+                  launchUrl(Uri.parse("tel:${place.phone}"));
                 },
               ),
             ],

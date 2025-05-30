@@ -1,19 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:loja_virtual/datas/place.dart';
+import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/tiles/place_tile.dart';
 import 'package:loja_virtual/widgets/custom_activity_indicator.dart';
 
 class PlacesTab extends StatelessWidget {
+  const PlacesTab({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<QuerySnapshot>(
-      future: FirebaseFirestore.instance.collection("places").get(),
+    return FutureBuilder<List<Place>>(
+      future: GetIt.instance<IHttpService>().getPlaces(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return CustomActivityIndicator();
         } else {
           return ListView(
-            children: snapshot.data!.docs.map((doc) => PlaceTile(doc)).toList(),
+            children: snapshot.data!.map((place) => PlaceTile(place)).toList(),
           );
         }
       },

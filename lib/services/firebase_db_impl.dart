@@ -7,6 +7,7 @@ import 'package:loja_virtual/datas/categoria.dart';
 import 'package:loja_virtual/datas/cupom.dart';
 import 'package:loja_virtual/datas/novidade.dart';
 import 'package:loja_virtual/datas/order.dart';
+import 'package:loja_virtual/datas/place.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
 
 class FirebaseDbimpl extends IHttpService {
@@ -149,15 +150,26 @@ class FirebaseDbimpl extends IHttpService {
 
   @override
   Future<Cupom> getCupomDesconto(String text) async {
-
-    var result = await FirebaseFirestore.instance
-        .collection("coupons")
-        .doc(text)
-        .get();
+    var result =
+        await FirebaseFirestore.instance.collection("coupons").doc(text).get();
 
     Map<String, dynamic>? data = result.data();
     var cupom = data != null ? Cupom.fromJson(data) : Cupom.empty();
 
     return cupom;
+  }
+
+  @override
+  Future<List<Place>> getPlaces() async {
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await FirebaseFirestore.instance.collection("places").get();
+    List<Place> listObj = snapshot.docs.map((e) {
+      var place = Place.fromJson(e.data());
+      // seta o ID do firebase no objeto
+      place.id = e.id;
+      return place;
+    }).toList();
+
+    return listObj;
   }
 }
