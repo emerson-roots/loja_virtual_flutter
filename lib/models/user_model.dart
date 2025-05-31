@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:loja_virtual/datas/constantes_globais.dart';
 import 'package:loja_virtual/datas/usuario.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -26,7 +27,7 @@ class UserModel extends Model {
   }
 
   UserModel() {
-    _httpService = GetIt.instance<IHttpService>();
+    _httpService = GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.FIREBASE_INJECTION);
   }
 
   @override

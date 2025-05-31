@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:loja_virtual/datas/constantes_globais.dart';
 import 'package:loja_virtual/datas/place.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/tiles/place_tile.dart';
@@ -11,7 +12,7 @@ class PlacesTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Place>>(
-      future: GetIt.instance<IHttpService>().getPlaces(),
+      future: GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.FIREBASE_INJECTION).getPlaces(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return CustomActivityIndicator();

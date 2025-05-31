@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:loja_virtual/datas/constantes_globais.dart';
 import 'package:loja_virtual/datas/order.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/widgets/custom_activity_indicator.dart';
@@ -14,7 +15,7 @@ class OrdersTab extends StatelessWidget {
     if (UserModel.of(context).isLoggedIn()) {
       String uid = UserModel.of(context).usuarioObj!.id!;
       Future<List<OrderModel>> pedidosUsuario =
-          GetIt.instance<IHttpService>().getPedidosByUserId(uid);
+          GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.FIREBASE_INJECTION).getPedidosByUserId(uid);
 
       return FutureBuilder<List<OrderModel>>(
           future: pedidosUsuario,

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
+import 'package:loja_virtual/datas/constantes_globais.dart';
 import 'package:loja_virtual/helpers/console_helper.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/models/user_model.dart';
@@ -18,7 +19,7 @@ class CartModel extends Model {
   late IHttpService _httpService;
 
   CartModel(this.user) {
-    _httpService = GetIt.instance<IHttpService>();
+    _httpService = GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.FIREBASE_INJECTION);
 
     if (user.isLoggedIn()) {
       _loadCartItems();

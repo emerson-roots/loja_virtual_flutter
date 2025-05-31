@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:loja_virtual/datas/Produto.dart';
 import 'package:loja_virtual/datas/categoria.dart';
+import 'package:loja_virtual/datas/constantes_globais.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
 import '../tiles/product_tile.dart';
 
@@ -16,7 +17,7 @@ class CategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _httpService = GetIt.instance<IHttpService>();
+    _httpService = GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.FIREBASE_INJECTION);
     return DefaultTabController(
       length: qtdTabs,
       child: Scaffold(

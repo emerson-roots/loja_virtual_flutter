@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_it/get_it.dart';
+import 'package:loja_virtual/datas/constantes_globais.dart';
 import 'package:loja_virtual/datas/novidade.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
+import 'package:loja_virtual/services/sqlite_db_service.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class HomeTab extends StatelessWidget {
@@ -13,7 +15,7 @@ class HomeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // injeção de dependencia com provider: ^6.0.0
-    _httpService = GetIt.instance<IHttpService>();
+    _httpService = GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.SQLITE_INJECTION);
 
     // renderiza o gradiente de cor de fundo
     Widget _buildBodyBack() => Container(

@@ -3,12 +3,15 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:loja_virtual/datas/constantes_globais.dart';
 import 'package:loja_virtual/helpers/console_helper.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/models/cart_model.dart';
 import 'package:loja_virtual/screens/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:loja_virtual/services/db_session_service.dart';
 import 'package:loja_virtual/services/firebase_db_impl.dart';
+import 'package:loja_virtual/services/sqlite_db_service.dart';
 import 'package:provider/provider.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'models/user_model.dart';
@@ -37,7 +40,7 @@ void main() async {
           providers: [
             // dependencias
             Provider<IHttpService>(
-              create: (_) => GetIt.instance<IHttpService>(),
+              create: (_) => GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.FIREBASE_INJECTION),
             ),
           ],
           child: MyApp(),
@@ -53,7 +56,10 @@ void main() async {
 }
 
 void registraDependencias() {
-  GetIt.instance.registerLazySingleton<IHttpService>(() => FirebaseDbimpl());
+  GetIt.instance.registerLazySingleton<IHttpService>(() => FirebaseDbimpl(), instanceName: ConstantesGlobais.FIREBASE_INJECTION);
+  GetIt.instance.registerLazySingleton<IHttpService>(() => SQLiteDbService(), instanceName: ConstantesGlobais.SQLITE_INJECTION);
+
+  GetIt.instance.registerLazySingleton<DbSessionService>(() => DbSessionService());
 }
 
 class MyApp extends StatelessWidget {

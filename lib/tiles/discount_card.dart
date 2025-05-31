@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:loja_virtual/datas/constantes_globais.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/models/cart_model.dart';
 
@@ -51,7 +52,7 @@ class DiscountCard extends StatelessWidget {
               ),
               initialValue: CartModel.of(context).couponCode ?? "",
               onFieldSubmitted: (text) async {
-                await GetIt.instance<IHttpService>()
+                await GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.FIREBASE_INJECTION)
                     .getCupomDesconto(text)
                     .then((cupom) {
                   if (cupom != null && cupom.percent > 0) {
