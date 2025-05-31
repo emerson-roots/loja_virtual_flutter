@@ -3,7 +3,6 @@ import 'package:get_it/get_it.dart';
 import 'package:loja_virtual/datas/Produto.dart';
 import 'package:loja_virtual/datas/categoria.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
-import 'package:provider/provider.dart';
 import '../tiles/product_tile.dart';
 
 class CategoryScreen extends StatelessWidget {
@@ -56,6 +55,21 @@ class CategoryScreen extends StatelessWidget {
             } else {
               int qtdItensNaGrade = snapshot.data!.length;
 
+              if (qtdItensNaGrade <= 0) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      "Ainda não há produtos cadastrados nesta categoria.",
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              }
               return TabBarView(
                 physics: const NeverScrollableScrollPhysics(),
                 children: [

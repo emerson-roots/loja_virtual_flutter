@@ -44,6 +44,28 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 
+  void _showSnackBarMessage({
+    required String mensagem,
+    required Color corSnackBar,
+    required int tempoDuracaoMensagem,
+  }) {
+    var snackBar = SnackBar(
+      content: Text(mensagem),
+      backgroundColor: corSnackBar,
+      duration: Duration(seconds: tempoDuracaoMensagem),
+      action: SnackBarAction(
+        label: 'FECHAR',
+        textColor: Colors.white,
+        onPressed: () {
+          // Alguma ação opcional
+        },
+      ),
+    );
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   Widget _corpoDaTelaScrollable() {
     final Color primaryColor = Theme.of(context).primaryColor;
     const bool botaoArredondado = false;
@@ -127,32 +149,47 @@ class _ProductScreenState extends State<ProductScreen> {
                             borderRadius: BorderRadius.circular(3.0),
                           ),
                   ),
-                  onPressed: sizeSelecionado != null ?
-                      () {
-                        if (UserModel.of(context).isLoggedIn()) {
-                          CartProduct cartProduct = CartProduct();
+                  onPressed: sizeSelecionado != null
+                      ? () {
+                          if (UserModel.of(context).isLoggedIn()) {
+                            List<CartProduct> produtosNoCarrinho =
+                                CartModel.of(context).products;
 
-                          cartProduct.size = sizeSelecionado;
-                          cartProduct.quantity = 1;
-                          cartProduct.pid = product.id;
-                          cartProduct.category = product.category;
-                          cartProduct.productData = product;
+                            if (produtosNoCarrinho.any((element) =>
+                                element.pid == product.id &&
+                                element.size == sizeSelecionado)) {
+                              _showSnackBarMessage(
+                                tempoDuracaoMensagem: 6,
+                                mensagem:
+                                    'Ops!\nVocê já tem esse produto no carrinho.',
+                                corSnackBar: Colors.orangeAccent,
+                              );
+                              return;
+                            }
 
-                          // adicionar ao carrinho
-                          CartModel.of(context).addCartItem(cartProduct);
+                            CartProduct cartProduct = CartProduct();
 
-                          Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => CartScreen())
-                          );
-                        } else {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => LoginScreen())
-                          );
+                            cartProduct.size = sizeSelecionado;
+                            cartProduct.quantity = 1;
+                            cartProduct.pid = product.id;
+                            cartProduct.category = product.category;
+                            cartProduct.productData = product;
+
+                            // adicionar ao carrinho
+                            CartModel.of(context).addCartItem(cartProduct);
+
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => CartScreen()));
+                          } else {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                          }
                         }
-                      }
                       : null,
-                  child: Text(UserModel.of(context).isLoggedIn() ?
-                    "Adicionar ao Carrinho" : "Entre para comprar",
+                  child: Text(
+                    UserModel.of(context).isLoggedIn()
+                        ? "Adicionar ao Carrinho"
+                        : "Entre para comprar",
                     style: const TextStyle(
                       fontSize: 18.0,
                       color: Colors.white,

@@ -66,7 +66,7 @@ class OrderTile extends StatelessWidget {
     String text = "Descrição:\n";
     for (var p in obj.products) {
       text +=
-          "${p.quantity} x ${p.product.title} (R\$ ${p.product.price!.toStringAsFixed(2)})\n";
+          "${p.quantity} x ${p.product.title} ${p.size} (R\$ ${p.product.price!.toStringAsFixed(2)})\n";
     }
 
     text += "Total: R\$ ${obj.totalPrice.toStringAsFixed(2)}";
