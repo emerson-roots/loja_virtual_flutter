@@ -38,9 +38,12 @@ class SQLiteDbService implements IHttpService{
   }
 
   @override
-  Future<List<Categoria>> getAllCategorias() {
-    // TODO: implement getAllCategorias
-    throw UnimplementedError();
+  Future<List<Categoria>> getAllCategorias() async {
+    Database? dbContact = await _dbSession.db;
+
+    List listMap = await dbContact!.rawQuery("SELECT * FROM Products");
+    List<Categoria> listObj = listMap.map((e) => Categoria.fromMap(e)).toList();
+    return listObj;
   }
 
   @override
@@ -64,9 +67,12 @@ class SQLiteDbService implements IHttpService{
   }
 
   @override
-  Future<List<Place>> getPlaces() {
-    // TODO: implement getPlaces
-    throw UnimplementedError();
+  Future<List<Place>> getPlaces() async {
+    Database? dbContact = await _dbSession.db;
+
+    List listMap = await dbContact!.rawQuery("SELECT * FROM Places");
+    List<Place> listObj = listMap.map((e) => Place.fromJson(e)).toList();
+    return listObj;
   }
 
   @override

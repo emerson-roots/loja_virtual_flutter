@@ -12,7 +12,7 @@ class PlacesTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Place>>(
-      future: GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.FIREBASE_INJECTION).getPlaces(),
+      future: GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.SQLITE_INJECTION).getPlaces(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return CustomActivityIndicator();

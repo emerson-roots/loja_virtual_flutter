@@ -35,9 +35,13 @@ class DbSessionService{
   Future<void> _onCreate(Database db, int version) async {
     /// cria tabelas
     await db.execute(QuerySqlite.createTableHome);
+    await db.execute(QuerySqlite.createTableProducts);
+    await db.execute(QuerySqlite.createTablePlaces);
 
     /// insere dados iniciais básicos
     await db.execute(QuerySqlite.insertsHome);
+    await db.execute(QuerySqlite.insertsProductsCategory);
+    await db.execute(QuerySqlite.insertsPlaces);
 
   }
 
