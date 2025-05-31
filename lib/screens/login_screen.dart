@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/datas/usuario.dart';
 import 'package:loja_virtual/screens/home_screen.dart';
 import 'package:loja_virtual/screens/signup_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -119,14 +120,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           minimumSize: const Size(50, 30),
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           alignment: Alignment.centerRight),
-                      onPressed: () {
+                      onPressed: () async {
                         if (_emailController.text.isEmpty) {
                           _showSnackBarMessage(
                               mensagem: "Insira seu e-mail para recuperação.",
                               corSnackBar: Colors.redAccent,
                               tempoDuracaoMensagem: 3);
-                        } else{
-                          model.recoverPass(_emailController.text);
+                        } else {
+                          await model.recoverPass(_emailController.text);
 
                           _showSnackBarMessage(
                               mensagem: "Verifique seu e-mail.",
@@ -157,9 +158,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           builder: (context) => HomeScreen()));
                     }*/
 
-                      model.signIn(
+                      var user = Usuario(
                           email: _emailController.text,
-                          pass: _passwordController.text,
+                          password: _passwordController.text,
+                          name: '',
+                          address: '');
+                      model.signIn(
+                          usuario: user,
                           onSuccess: _onSuccess,
                           onFail: _onFail);
                     },
@@ -186,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => HomeScreen()),
-            (route) => false, // Remove todas as rotas anteriores.
+        (route) => false, // Remove todas as rotas anteriores.
       );
     }
   }
@@ -197,7 +202,6 @@ class _LoginScreenState extends State<LoginScreen> {
         corSnackBar: Colors.redAccent,
         tempoDuracaoMensagem: 4);
 
-
     return exMessage;
   }
 
@@ -206,8 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
     required Color corSnackBar,
     required int tempoDuracaoMensagem,
   }) {
-    var snackBar =  SnackBar(
-
+    var snackBar = SnackBar(
       content: Text(mensagem),
       backgroundColor: corSnackBar,
       duration: Duration(seconds: tempoDuracaoMensagem),

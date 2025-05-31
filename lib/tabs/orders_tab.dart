@@ -12,7 +12,7 @@ class OrdersTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (UserModel.of(context).isLoggedIn()) {
-      String uid = UserModel.of(context).firebaseUser!.uid;
+      String uid = UserModel.of(context).usuarioObj!.id!;
       Future<List<OrderModel>> pedidosUsuario =
           GetIt.instance<IHttpService>().getPedidosByUserId(uid);
 
@@ -22,13 +22,19 @@ class OrdersTab extends StatelessWidget {
             if (!snapshot.hasData) {
               return CustomActivityIndicator();
             } else {
-              return ListView(
-                children: snapshot.data!
-                    .map((doc) => OrderTile(doc))
-                    .toList()
-                    .reversed
-                    .toList(),
-              );
+              if (snapshot.data == null || snapshot.data!.isEmpty) {
+                return Center(
+                  child: Text('Você não possui pedidos finalizados.'),
+                );
+              } else {
+                return ListView(
+                  children: snapshot.data!
+                      .map((doc) => OrderTile(doc))
+                      .toList()
+                      .reversed
+                      .toList(),
+                );
+              }
             }
           });
     } else {
@@ -62,8 +68,8 @@ class OrdersTab extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const LoginScreen()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const LoginScreen()));
               },
               child: const Text(
                 "Entrar",

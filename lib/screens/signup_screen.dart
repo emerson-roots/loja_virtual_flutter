@@ -3,6 +3,8 @@ import 'package:loja_virtual/models/user_model.dart';
 import 'package:loja_virtual/screens/home_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import '../datas/usuario.dart';
+
 class SignupScreen extends StatefulWidget {
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -35,7 +37,7 @@ class _SignupScreenState extends State<SignupScreen> {
           if (model.isLoading) {
             return Container(
               color: Colors.black.withOpacity(0.1),
-              child:  Center(
+              child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
@@ -119,17 +121,16 @@ class _SignupScreenState extends State<SignupScreen> {
                               borderRadius: BorderRadius.circular(3.0),
                             ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        Map<String, dynamic> userData = {
-                          "name": _nameController.text,
-                          "email": _emailController.text,
-                          "address": _addressController.text
-                        };
+                        var user = Usuario(
+                            email: _emailController.text,
+                            password: _passController.text,
+                            name: _nameController.text,
+                            address: _addressController.text);
 
-                        var isContaCriadaComSucesso = model.signUp(
-                            userData: userData,
-                            pass: _passController.text,
+                        var isContaCriadaComSucesso = await model.signUp(
+                            usuario: user,
                             onSuccess: _onSuccess,
                             onFail: _onFail);
 

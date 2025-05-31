@@ -30,31 +30,31 @@ class CartModel extends Model {
   }
 
   void addCartItem(CartProduct cartProduct) {
-    _httpService.addCartItem(cartProduct, user.firebaseUser!.uid);
+    _httpService.addCartItem(cartProduct, _validaUsuario());
     products.add(cartProduct);
     notifyListeners();
   }
 
   void removeCartItem(CartProduct cartProduct) {
-    _httpService.removeCartItem(cartProduct, user.firebaseUser!.uid);
+    _httpService.removeCartItem(cartProduct, _validaUsuario());
     products.remove(cartProduct);
     notifyListeners();
   }
 
   void decrementProduct(CartProduct cartProduct) {
     cartProduct.quantity = cartProduct.quantity! - 1;
-    _httpService.decrementProduct(cartProduct, user.firebaseUser!.uid);
+    _httpService.decrementProduct(cartProduct, _validaUsuario());
     notifyListeners();
   }
 
   void incrementProduct(CartProduct cartProduct) {
     cartProduct.quantity = cartProduct.quantity! + 1;
-    _httpService.incrementProduct(cartProduct, user.firebaseUser!.uid);
+    _httpService.incrementProduct(cartProduct, _validaUsuario());
     notifyListeners();
   }
 
   void _loadCartItems() async {
-    products = await _httpService.loadCartItemsByUserId(user.firebaseUser!.uid);
+    products = await _httpService.loadCartItemsByUserId(_validaUsuario());
     notifyListeners();
   }
 
@@ -90,6 +90,17 @@ class CartModel extends Model {
     notifyListeners();
   }
 
+  String _validaUsuario() {
+    if (user.usuarioObj == null ||
+        user.usuarioObj?.id == null ||
+        user.usuarioObj!.id == '') {
+      throw Exception('Informações do usuário logado inválidas.');
+    } else {
+      String userId = user.usuarioObj?.id ?? '';
+      return userId;
+    }
+  }
+
   Future<String?> finishOrder() async {
     if (products.isEmpty) return null;
 
@@ -103,7 +114,7 @@ class CartModel extends Model {
     // salva pedido no firebase
     var idPedido = await _httpService.postFinalizarPedido(
       products,
-      user.firebaseUser!.uid,
+      _validaUsuario(),
       shipPrice,
       productsPrice,
       discount,

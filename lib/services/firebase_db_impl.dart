@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:loja_virtual/datas/Produto.dart';
+import 'package:loja_virtual/datas/usuario.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
 import 'package:loja_virtual/datas/categoria.dart';
 import 'package:loja_virtual/datas/cupom.dart';
@@ -225,5 +227,67 @@ class FirebaseDbimpl extends IHttpService {
 
     var idPedido = refOrderId.id;
     return idPedido;
+  }
+
+  @override
+  Future<void> criarConta({required Usuario user}) async {
+    await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+            email: user.email, password: user.password)
+        .then((userFirebase) async {
+      user.id = userFirebase.user!.uid;
+      user.firebaseUser = userFirebase.user;
+
+      Map<String, dynamic> userData = {
+        "name": user.name,
+        "email": user.email,
+        "address": user.address,
+        // "password": user.password //comentado para não salvar o password no firebase datastore
+      };
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userFirebase.user!.uid)
+          .set(userData);
+    });
+  }
+
+  @override
+  Future<void> logar({required Usuario user}) async {
+    await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: user.email, password: user.password)
+        .then((userFirebase) {
+      user.id = userFirebase.user!.uid;
+      user.firebaseUser = userFirebase.user;
+    });
+  }
+
+  @override
+  Future<Usuario> loadCurrentUser({required String userId}) async {
+    if (userId.isEmpty) {
+      throw Exception('Não foi possível carregar o usuário logado.');
+    }
+
+    Usuario obj = Usuario.empty();
+
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .get()
+        .then((value) {
+      obj = Usuario.fromJson(value.data() as Map<String, dynamic>);
+      obj.id = value.id;
+    });
+
+    return obj;
+  }
+
+  @override
+  Future<void> recoverPass({required String email}) async {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+  }
+
+  @override
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
   }
 }

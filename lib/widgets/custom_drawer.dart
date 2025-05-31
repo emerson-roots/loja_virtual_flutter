@@ -57,7 +57,7 @@ class CustomDrawer extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  "Olá, ${!model.isLoggedIn() ? "" : model.userData["name"]}",
+                                  "Olá, ${!model.isLoggedIn() ? "" : model.usuarioObj!.name}",
                                   style: const TextStyle(
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.bold,
@@ -79,7 +79,7 @@ class CustomDrawer extends StatelessWidget {
                                       MaterialPageRoute(
                                           builder: (context) => LoginScreen()),
                                     );
-                                  } else{
+                                  } else {
                                     model.signOut();
                                   }
                                 },

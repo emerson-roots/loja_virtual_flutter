@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:loja_virtual/datas/Produto.dart';
+import 'package:loja_virtual/datas/usuario.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
 import 'package:loja_virtual/datas/categoria.dart';
 import 'package:loja_virtual/datas/cupom.dart';
@@ -7,6 +10,12 @@ import 'package:loja_virtual/datas/order.dart';
 import 'package:loja_virtual/datas/place.dart';
 
 abstract class IHttpService {
+  Future<void> criarConta({required Usuario user});
+  Future<void> logar({required Usuario user});
+  Future<void> recoverPass({required String email});
+  Future<void> signOut();
+  Future<Usuario> loadCurrentUser({required String userId});
+
   Future<List<Novidade>> getNovidades();
   Future<List<Categoria>> getAllCategorias();
   Future<List<Produto>> getProdutosByCategoriaId(String id);
