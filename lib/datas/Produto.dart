@@ -24,6 +24,18 @@ class Produto {
     sizes = snapshot.get("sizes");
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'category': category,
+      'id': id,
+      'title': title,
+      'description': description,
+      'price': price,
+      'images': images,
+      'sizes': sizes,
+    };
+  }
+
   factory Produto.fromJson(Map<String, dynamic> json) {
     return Produto()
       ..category = json['category']

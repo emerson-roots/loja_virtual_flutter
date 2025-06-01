@@ -1,5 +1,10 @@
 abstract class QuerySqlite {
 
+  static const String CATEGORY_TABLE_NAME = 'CategoryProduct';
+  static const String PRODUCT_TABLE_NAME = 'Products';
+  static const String PRODUCT_IMAGE_TABLE_NAME = 'ProductImages';
+  static const String PRODUCT_SIZE_TABLE_NAME = 'ProductSizes';
+
   static const String createTableHome = '''
   CREATE TABLE IF NOT EXISTS Home (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -10,8 +15,8 @@ abstract class QuerySqlite {
 );
 ''';
 
-  static const String createTableProducts = '''
-CREATE TABLE Products (
+  static const String createTableCategoryProduto = '''
+CREATE TABLE $CATEGORY_TABLE_NAME (
     id TEXT NOT NULL,
     title TEXT NOT NULL,
     icon TEXT NOT NULL
@@ -42,6 +47,35 @@ CREATE TABLE Places (
   ''';
 
 
+  static const String createTableProducts = '''
+  CREATE TABLE ${PRODUCT_TABLE_NAME} (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    category TEXT,
+    title TEXT,
+    description TEXT,
+    price REAL
+);
+  ''';
+
+  static const String createTableProductImages = '''
+  CREATE TABLE ${PRODUCT_IMAGE_TABLE_NAME} (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_id INTEGER,
+    image_url TEXT,
+    FOREIGN KEY (product_id) REFERENCES Products(id) ON DELETE CASCADE
+);
+
+  ''';
+
+  static const String createTableProductSizes = '''
+  CREATE TABLE $PRODUCT_SIZE_TABLE_NAME (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_id INTEGER,
+    size TEXT,
+    FOREIGN KEY (product_id) REFERENCES Products(id) ON DELETE CASCADE
+);
+  ''';
+
   static const String insertsHome = '''
   INSERT INTO Home (image, x, y, pos) VALUES
 ('https://images.pexels.com/photos/206434/pexels-photo-206434.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=350', 3, 3, 0),
@@ -53,7 +87,7 @@ CREATE TABLE Places (
   ''';
 
   static const String insertsProductsCategory = '''
-  INSERT INTO Products (id, title, icon) VALUES 
+  INSERT INTO $CATEGORY_TABLE_NAME (id, title, icon) VALUES 
 ('blusas', 'Blusas', 'https://media.istockphoto.com/id/1218433118/pt/foto/womens-light-blouse-isolated-on-white-background.jpg?s=2048x2048&w=is&k=20&c=B97pRQviyylnbkfGLM1A6NU-Psv7d6icjSYe0BSLVMA='),
 ('bones', 'Bonés', 'https://images.pexels.com/photos/844867/pexels-photo-844867.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
 ('calcas', 'Calças', 'https://images.pexels.com/photos/603022/pexels-photo-603022.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
@@ -75,4 +109,41 @@ CREATE TABLE Places (
   INSERT INTO Users (email, password, name, address) VALUES
 ('teste@teste.com', '123456', 'Conta Teste', 'Rua dos Testes, 123');
   ''';
+
+  static const String insertsProducts = '''
+  INSERT INTO $PRODUCT_TABLE_NAME (category, title, description, price) VALUES
+('camisetas', 'Camiseta Branca', 'Produto de alta qualidade!', 50.99),
+('camisetas', 'Camiseta azul', 'Descricao blue', 15.5),
+('camisetas', 'Camiseta Verde', 'Um verde de tonalidade tipo musgo', 17.0),
+('calcas', 'Calça Jeans', 'Calça tipo Denin', 89.9);
+
+  ''';
+
+  static const String insertsProductImages = '''
+  INSERT INTO $PRODUCT_IMAGE_TABLE_NAME (product_id, image_url) VALUES
+(1, 'https://images.pexels.com/photos/8217533/pexels-photo-8217533.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
+(1, 'https://images.pexels.com/photos/8217291/pexels-photo-8217291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
+
+
+(2, 'https://img.freepik.com/free-photo/portrait-smiling-young-man-wearing-fashion-glasses_329181-2141.jpg?t=st=1736013351~exp=1736016951~hmac=1a9067bd3da9cb5f6a0608c0b9e950341e85464b03bff927483442d9d208ad93&w=740'),
+(2, 'https://img.freepik.com/free-photo/portrait-smiling-young-man_329181-2144.jpg?t=st=1736013392~exp=1736016992~hmac=4bee37ac7ff7a5e341a5bb94ca88d3f5cf017339056f0d72d75e8ce9f4ea21d7&w=740'),
+
+(3, 'https://img.freepik.com/free-photo/young-woman-with-short-curly-hair-green-t-shirt-happy-positive-winking-showing-thumbs-up-standing-orange-wall_141793-29187.jpg?t=st=1736013453~exp=1736017053~hmac=82393c956727af064089d0b2a4659da3aa78efbe163e4f391a53d43374dbaf05&w=1380'),
+(3, 'https://img.freepik.com/free-photo/young-woman-with-short-curly-hair-green-t-shirt-clenching-fists-happy-excited-standing-orange-wall_141793-29183.jpg?t=st=1736013577~exp=1736017177~hmac=6ae0bf11064d44a82db32c4ab03fc10539b5d1fddd3e1c11ec8d5000e84ffdd3&w=1380'),
+
+(4, 'https://img.freepik.com/fotos-gratis/denims_1303-4490.jpg?ga=GA1.1.1465085871.1748478929&w=740'),
+(4, 'https://img.freepik.com/fotos-gratis/posicao-mulher-em-escritorio_23-2148180649.jpg');
+
+
+  ''';
+
+  static const String insertsProducSizes = '''
+  INSERT INTO $PRODUCT_SIZE_TABLE_NAME (product_id, size) VALUES
+(1, 'P'), (1, 'M'), (1, 'G'), (1, 'GG'), (1, 'XG'), (1, 'XXG'), (1, 'XL'),
+(2, 'P'), (2, 'G'), (2, 'XL'),
+(3, 'P'), (3, 'M'), (3, 'GG'),
+(4, 'P'), (4, 'M'), (4, 'GG');
+
+  ''';
+
 }

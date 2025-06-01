@@ -6,6 +6,7 @@ import 'package:loja_virtual/datas/cupom.dart';
 import 'package:loja_virtual/datas/novidade.dart';
 import 'package:loja_virtual/datas/order.dart';
 import 'package:loja_virtual/datas/place.dart';
+import 'package:loja_virtual/datas/query_sqlite.dart';
 import 'package:loja_virtual/datas/usuario.dart';
 import 'package:loja_virtual/helpers/console_helper.dart';
 import 'package:loja_virtual/helpers/exception_custom.dart';
@@ -44,7 +45,8 @@ class SQLiteDbService implements IHttpService {
   Future<List<Categoria>> getAllCategorias() async {
     Database? dbContact = await _dbSession.db;
 
-    List listMap = await dbContact!.rawQuery("SELECT * FROM Products");
+    List listMap = await dbContact!
+        .rawQuery("SELECT * FROM ${QuerySqlite.CATEGORY_TABLE_NAME}");
     List<Categoria> listObj = listMap.map((e) => Categoria.fromMap(e)).toList();
     return listObj;
   }
@@ -72,17 +74,69 @@ class SQLiteDbService implements IHttpService {
 
   @override
   Future<List<Place>> getPlaces() async {
-    Database? dbContact = await _dbSession.db;
+    Database? db = await _dbSession.db;
 
-    List listMap = await dbContact!.rawQuery("SELECT * FROM Places");
+    List listMap = await db!.rawQuery("SELECT * FROM Places");
     List<Place> listObj = listMap.map((e) => Place.fromJson(e)).toList();
     return listObj;
   }
 
   @override
-  Future<List<Produto>> getProdutosByCategoriaId(String id) {
-    // TODO: implement getProdutosByCategoriaId
-    throw UnimplementedError();
+  Future<List<Produto>> getProdutosByCategoriaId(String id) async {
+    try {
+      Database? db = await _dbSession.db;
+
+      final result = await db?.rawQuery('''
+    SELECT 
+      p.id AS product_id,
+      p.category,
+      p.title,
+      p.description,
+      p.price,
+      pi.image_url,
+      ps.size
+    FROM ${QuerySqlite.PRODUCT_TABLE_NAME} p
+    LEFT JOIN ${QuerySqlite.PRODUCT_IMAGE_TABLE_NAME} pi ON p.id = pi.product_id
+    LEFT JOIN ${QuerySqlite.PRODUCT_SIZE_TABLE_NAME} ps ON p.id = ps.product_id
+    WHERE p.category = ?
+    order by p.id asc, ps.id ASC
+;
+  ''', [id]);
+
+      final Map<int, Produto> produtosMap = {};
+
+      for (var row in result!) {
+        final int productId = row['product_id'] as int;
+
+        if (!produtosMap.containsKey(productId)) {
+          produtosMap[productId] = Produto.fromJson(row);
+        }
+
+        final produto = produtosMap[productId]!;
+
+        final imageUrl = row['image_url'] as String?;
+        if (imageUrl != null) {
+          produto.images ??= []; // Inicializa a lista se estiver nula
+          if (!produto.images!.contains(imageUrl)) {
+            produto.images!.add(imageUrl);
+          }
+        }
+
+        final size = row['size'] as String?;
+        if (size != null) {
+          produto.sizes ??= []; // Inicializa a lista se estiver nula
+
+          if (!produto.sizes!.contains(size)) {
+            produto.sizes!.add(size);
+          }
+        }
+      }
+
+      return produtosMap.values.toList();
+    } catch (ex, stack) {
+      ConsoleHelper.printError('Erro: $ex | Stack: $stack');
+      rethrow;
+    }
   }
 
   @override

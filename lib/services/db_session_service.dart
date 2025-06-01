@@ -1,4 +1,5 @@
 import 'package:loja_virtual/datas/query_sqlite.dart';
+import 'package:loja_virtual/helpers/console_helper.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -33,17 +34,31 @@ class DbSessionService{
   }
 
   Future<void> _onCreate(Database db, int version) async {
-    /// cria tabelas
-    await db.execute(QuerySqlite.createTableHome);
-    await db.execute(QuerySqlite.createTableProducts);
-    await db.execute(QuerySqlite.createTablePlaces);
-    await db.execute(QuerySqlite.createTableUsers);
 
-    /// insere dados iniciais básicos
-    await db.execute(QuerySqlite.insertsHome);
-    await db.execute(QuerySqlite.insertsProductsCategory);
-    await db.execute(QuerySqlite.insertsPlaces);
-    await db.execute(QuerySqlite.insertsUser);
+    try {
+      /// cria tabelas
+      await db.execute(QuerySqlite.createTableHome);
+      await db.execute(QuerySqlite.createTableCategoryProduto);
+      await db.execute(QuerySqlite.createTablePlaces);
+      await db.execute(QuerySqlite.createTableUsers);
+      await db.execute(QuerySqlite.createTableProducts);
+      await db.execute(QuerySqlite.createTableProductImages);
+      await db.execute(QuerySqlite.createTableProductSizes);
+
+      /// insere dados iniciais básicos
+      await db.execute(QuerySqlite.insertsHome);
+      await db.execute(QuerySqlite.insertsProductsCategory);
+      await db.execute(QuerySqlite.insertsPlaces);
+      await db.execute(QuerySqlite.insertsUser);
+      await db.execute(QuerySqlite.insertsProducts);
+      await db.execute(QuerySqlite.insertsProductImages);
+      await db.execute(QuerySqlite.insertsProducSizes);
+    } catch (ex, stack) {
+        ConsoleHelper.printError('Erro: $ex | Stack: $stack');
+        rethrow;
+    }
+
+
 
   }
 
