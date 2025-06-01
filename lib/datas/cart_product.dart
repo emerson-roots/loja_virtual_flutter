@@ -3,6 +3,7 @@ import 'package:loja_virtual/datas/Produto.dart';
 
 class CartProduct {
   String? cid;
+  String? uid;
 
   String? category;
   String? pid;
@@ -25,6 +26,7 @@ class CartProduct {
   Map<String, dynamic> toMap() {
     return {
       "category": category,
+      "uid": uid,
       "pid": pid,
       "quantity": quantity,
       "size": size,

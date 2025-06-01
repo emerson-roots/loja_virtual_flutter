@@ -19,7 +19,8 @@ class CartModel extends Model {
   late IHttpService _httpService;
 
   CartModel(this.user) {
-    _httpService = GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.FIREBASE_INJECTION);
+    _httpService = GetIt.instance<IHttpService>(
+        instanceName: ConstantesGlobais.FIREBASE_INJECTION);
 
     if (user.isLoggedIn()) {
       _loadCartItems();
@@ -31,7 +32,9 @@ class CartModel extends Model {
   }
 
   void addCartItem(CartProduct cartProduct) {
-    _httpService.addCartItem(cartProduct, _validaUsuario());
+    GetIt.instance<IHttpService>(
+            instanceName: ConstantesGlobais.SQLITE_INJECTION)
+        .addCartItem(cartProduct, _validaUsuario());
     products.add(cartProduct);
     notifyListeners();
   }
@@ -55,7 +58,9 @@ class CartModel extends Model {
   }
 
   void _loadCartItems() async {
-    products = await _httpService.loadCartItemsByUserId(_validaUsuario());
+    products = await GetIt.instance<IHttpService>(
+            instanceName: ConstantesGlobais.SQLITE_INJECTION)
+        .loadCartItemsByUserId(_validaUsuario());
     notifyListeners();
   }
 

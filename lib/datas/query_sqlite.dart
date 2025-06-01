@@ -4,6 +4,7 @@ abstract class QuerySqlite {
   static const String PRODUCT_TABLE_NAME = 'Products';
   static const String PRODUCT_IMAGE_TABLE_NAME = 'ProductImages';
   static const String PRODUCT_SIZE_TABLE_NAME = 'ProductSizes';
+  static const String CART_PRODUCT_TABLE_NAME = 'CartProduct';
 
   static const String createTableHome = '''
   CREATE TABLE IF NOT EXISTS Home (
@@ -76,6 +77,22 @@ CREATE TABLE Places (
 );
   ''';
 
+
+  static const String createTableCartProducts = '''
+  CREATE TABLE $CART_PRODUCT_TABLE_NAME (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    uid TEXT NOT NULL,
+    pid TEXT NOT NULL,
+    category TEXT NOT NULL,
+    quantity INTEGER NOT NULL,
+    size TEXT NOT NULL,
+    product_title TEXT NOT NULL,
+    product_description TEXT,
+    product_price REAL NOT NULL
+);
+
+  ''';
+
   static const String insertsHome = '''
   INSERT INTO Home (image, x, y, pos) VALUES
 ('https://images.pexels.com/photos/206434/pexels-photo-206434.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=350', 3, 3, 0),
@@ -107,7 +124,7 @@ CREATE TABLE Places (
 
   static const String insertsUser = '''
   INSERT INTO Users (email, password, name, address) VALUES
-('teste@teste.com', '123456', 'Conta Teste', 'Rua dos Testes, 123');
+('test@test.com', '123456', 'Test Account', 'Rua dos Testes, 123');
   ''';
 
   static const String insertsProducts = '''

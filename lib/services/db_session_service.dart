@@ -3,16 +3,17 @@ import 'package:loja_virtual/helpers/console_helper.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DbSessionService{
-
+class DbSessionService {
   static final DbSessionService _instance = DbSessionService._internal();
-  factory DbSessionService() => _instance;
-  DbSessionService._internal();
 
+  factory DbSessionService() => _instance;
+
+  DbSessionService._internal();
 
   bool _createdDatabase = false;
 
   Database? _db;
+
   Future<Database?> get db async {
     if (_createdDatabase) {
       return _db;
@@ -25,16 +26,11 @@ class DbSessionService{
   Future<Database> _initDatabase() async {
     final path = join(await getDatabasesPath(), 'loja_flutter.db3');
 
-    Database dbOpen = await openDatabase(
-      path,
-      version: 1,
-      onCreate: _onCreate
-    );
+    Database dbOpen = await openDatabase(path, version: 1, onCreate: _onCreate);
     return dbOpen;
   }
 
   Future<void> _onCreate(Database db, int version) async {
-
     try {
       /// cria tabelas
       await db.execute(QuerySqlite.createTableHome);
@@ -45,6 +41,8 @@ class DbSessionService{
       await db.execute(QuerySqlite.createTableProductImages);
       await db.execute(QuerySqlite.createTableProductSizes);
 
+      await db.execute(QuerySqlite.createTableCartProducts);
+
       /// insere dados iniciais básicos
       await db.execute(QuerySqlite.insertsHome);
       await db.execute(QuerySqlite.insertsProductsCategory);
@@ -54,12 +52,8 @@ class DbSessionService{
       await db.execute(QuerySqlite.insertsProductImages);
       await db.execute(QuerySqlite.insertsProducSizes);
     } catch (ex, stack) {
-        ConsoleHelper.printError('Erro: $ex | Stack: $stack');
-        rethrow;
+      ConsoleHelper.printError('Erro: $ex | Stack: $stack');
+      rethrow;
     }
-
-
-
   }
-
 }

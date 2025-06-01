@@ -22,9 +22,26 @@ class SQLiteDbService implements IHttpService {
   }
 
   @override
-  addCartItem(CartProduct cartProduct, String userId) {
-    // TODO: implement addCartItem
-    throw UnimplementedError();
+  addCartItem(CartProduct cartProduct, String userId) async {
+    final db = await _dbSession.db;
+
+    await db!.rawInsert(
+      '''
+    INSERT INTO ${QuerySqlite.CART_PRODUCT_TABLE_NAME} (
+      uid, pid, category, quantity, size, product_title, product_description, product_price
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ''',
+      [
+        userId,
+        cartProduct.pid,
+        cartProduct.category,
+        cartProduct.quantity,
+        cartProduct.size,
+        cartProduct.productData?.title,
+        cartProduct.productData?.description,
+        cartProduct.productData?.price,
+      ],
+    );
   }
 
   @override
@@ -88,7 +105,7 @@ class SQLiteDbService implements IHttpService {
 
       final result = await db?.rawQuery('''
     SELECT 
-      p.id AS product_id,
+      p.id,
       p.category,
       p.title,
       p.description,
@@ -106,7 +123,7 @@ class SQLiteDbService implements IHttpService {
       final Map<int, Produto> produtosMap = {};
 
       for (var row in result!) {
-        final int productId = row['product_id'] as int;
+        final int productId = row['id'] as int;
 
         if (!produtosMap.containsKey(productId)) {
           produtosMap[productId] = Produto.fromJson(row);
@@ -146,9 +163,47 @@ class SQLiteDbService implements IHttpService {
   }
 
   @override
-  Future<List<CartProduct>> loadCartItemsByUserId(String userId) {
-    // TODO: implement loadCartItemsByUserId
-    throw UnimplementedError();
+  Future<List<CartProduct>> loadCartItemsByUserId(String userId) async {
+    final db = await _dbSession.db;
+
+    final List<Map<String, dynamic>> maps = await db!.query(
+      'CartProduct',
+      where: 'uid = ?',
+      whereArgs: [userId],
+    );
+
+    List<CartProduct> listRetorno = [];
+    maps.forEach((map) async {
+      var idProduto = map['pid'].toString();
+
+      // recupera url das imagens do produto para mostrar a primeira img no carrinho
+      List<Map<String, Object?>> imageMaps = await db!.query(
+          QuerySqlite.PRODUCT_IMAGE_TABLE_NAME,
+          where: "product_id = ?",
+          whereArgs: [idProduto]);
+
+      var cartProduct = CartProduct();
+      var produto = Produto();
+
+      var images = imageMaps.map((x) => x['image_url'] as String).toList();
+
+      produto.id = idProduto;
+      produto.title = map['product_title'];
+      produto.description = map['product_description'];
+      produto.price = map['product_price'];
+      produto.images = images;
+
+      cartProduct.cid = map['id'].toString();
+      cartProduct.uid = map['uid'].toString();
+      cartProduct.pid = idProduto;
+      cartProduct.category = map['category'];
+      cartProduct.quantity = map['quantity'];
+      cartProduct.size = map['size'];
+      cartProduct.productData = produto;
+
+      listRetorno.add(cartProduct);
+    });
+    return listRetorno;
   }
 
   @override

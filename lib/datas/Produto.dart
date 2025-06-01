@@ -39,7 +39,7 @@ class Produto {
   factory Produto.fromJson(Map<String, dynamic> json) {
     return Produto()
       ..category = json['category']
-      ..id = json['id']
+      ..id = json['id'].toString()// convertido para string
       ..title = json['title']
       ..description = json['description']
       ..price = (json['price'] as num?)?.toDouble()
