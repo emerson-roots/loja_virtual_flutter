@@ -4,7 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'package:loja_virtual/datas/constantes_globais.dart';
 import 'package:loja_virtual/datas/novidade.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
-import 'package:loja_virtual/services/sqlite_db_service.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class HomeTab extends StatelessWidget {

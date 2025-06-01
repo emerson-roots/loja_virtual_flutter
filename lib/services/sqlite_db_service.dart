@@ -6,13 +6,14 @@ import 'package:loja_virtual/datas/cupom.dart';
 import 'package:loja_virtual/datas/novidade.dart';
 import 'package:loja_virtual/datas/order.dart';
 import 'package:loja_virtual/datas/place.dart';
-import 'package:loja_virtual/datas/query_sqlite.dart';
 import 'package:loja_virtual/datas/usuario.dart';
+import 'package:loja_virtual/helpers/console_helper.dart';
+import 'package:loja_virtual/helpers/exception_custom.dart';
 import 'package:loja_virtual/interfaces/http_service.dart';
 import 'package:loja_virtual/services/db_session_service.dart';
 import 'package:sqflite/sqflite.dart';
 
-class SQLiteDbService implements IHttpService{
+class SQLiteDbService implements IHttpService {
   late final DbSessionService _dbSession;
 
   SQLiteDbService() {
@@ -26,9 +27,11 @@ class SQLiteDbService implements IHttpService{
   }
 
   @override
-  Future<void> criarConta({required Usuario user}) {
-    // TODO: implement criarConta
-    throw UnimplementedError();
+  Future<void> criarConta({required Usuario user}) async {
+    Database? dbContact = await _dbSession.db;
+
+    int? id = await dbContact?.insert('Users', user.toJson());
+    user.id = id != null ? id.toString() : '0';
   }
 
   @override
@@ -60,6 +63,7 @@ class SQLiteDbService implements IHttpService{
     List<Novidade> novidades = listMap.map((e) => Novidade.fromMap(e)).toList();
     return novidades;
   }
+
   @override
   Future<List<OrderModel>> getPedidosByUserId(String userId) {
     // TODO: implement getPedidosByUserId
@@ -94,15 +98,31 @@ class SQLiteDbService implements IHttpService{
   }
 
   @override
-  Future<Usuario> loadCurrentUser({required String userId}) {
-    // TODO: implement loadCurrentUser
-    throw UnimplementedError();
+  Future<Usuario> loadCurrentUser({required String userId}) async {
+    Database? dbContact = await _dbSession.db;
+    List<Map<String, Object?>> maps =
+        await dbContact!.query('Users', where: "id = ?", whereArgs: [userId]);
+
+    if (maps.isNotEmpty) {
+      return Usuario.fromJson(maps.first);
+    } else {
+      throw Exception('Não foi possível carregar o usuário logado.');
+    }
   }
 
   @override
-  Future<void> logar({required Usuario user}) {
-    // TODO: implement logar
-    throw UnimplementedError();
+  Future<void> logar({required Usuario user}) async {
+    Database? dbContact = await _dbSession.db;
+    List<Map<String, dynamic>> maps = await dbContact!.query('Users',
+        where: "email = ? and password = ?",
+        whereArgs: [user.email, user.password]);
+
+    if (maps.isEmpty) {
+      throw Exception('Usuário ou senha inválida.');
+    } else {
+      var obj = Usuario.fromJson(maps.first);
+      user.id = obj.id;
+    }
   }
 
   @override
@@ -113,9 +133,11 @@ class SQLiteDbService implements IHttpService{
   }
 
   @override
-  Future<void> recoverPass({required String email}) {
-    // TODO: implement recoverPass
-    throw UnimplementedError();
+  Future<void> recoverPass({required String email}) async {
+    ConsoleHelper.printAlert(
+        '{recoverPass} em SQLiteDbService não possui ação!');
+    throw ExceptionCustom(
+        'Este app é somente de amostra/portifolio. Envio de e-mail para recuperação de senha está desativado.');
   }
 
   @override
@@ -125,8 +147,7 @@ class SQLiteDbService implements IHttpService{
   }
 
   @override
-  Future<void> signOut() {
-    // TODO: implement signOut
-    throw UnimplementedError();
+  Future<void> signOut() async {
+    ConsoleHelper.printAlert('{signOut} em SQLiteDbService não possui ação!');
   }
 }

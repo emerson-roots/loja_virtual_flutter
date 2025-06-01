@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/datas/usuario.dart';
+import 'package:loja_virtual/helpers/console_helper.dart';
 import 'package:loja_virtual/screens/home_screen.dart';
 import 'package:loja_virtual/screens/signup_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -121,19 +122,29 @@ class _LoginScreenState extends State<LoginScreen> {
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           alignment: Alignment.centerRight),
                       onPressed: () async {
-                        if (_emailController.text.isEmpty) {
-                          _showSnackBarMessage(
-                              mensagem: "Insira seu e-mail para recuperação.",
-                              corSnackBar: Colors.redAccent,
-                              tempoDuracaoMensagem: 3);
-                        } else {
-                          await model.recoverPass(_emailController.text);
 
-                          _showSnackBarMessage(
-                              mensagem: "Verifique seu e-mail.",
-                              corSnackBar: Colors.blue.shade600,
-                              tempoDuracaoMensagem: 3);
+                        try {
+                          if (_emailController.text.isEmpty) {
+                            _showSnackBarMessage(
+                                mensagem: "Insira seu e-mail para recuperação.",
+                                corSnackBar: Colors.redAccent,
+                                tempoDuracaoMensagem: 3);
+                          } else {
+                            await model.recoverPass(_emailController.text);
+
+                            _showSnackBarMessage(
+                                mensagem: "Verifique seu e-mail.",
+                                corSnackBar: Colors.blue.shade600,
+                                tempoDuracaoMensagem: 3);
+                          }
+                        } catch (ex, stack) {
+                            ConsoleHelper.printError('Erro: $ex | Stack: $stack');
+                            _showSnackBarMessage(
+                                mensagem: "$ex",
+                                corSnackBar: Colors.redAccent,
+                                tempoDuracaoMensagem: 6);
                         }
+
                       },
                       child: const Text(
                         "Esqueci minha senha",

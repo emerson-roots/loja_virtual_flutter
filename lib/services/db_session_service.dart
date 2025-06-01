@@ -37,11 +37,13 @@ class DbSessionService{
     await db.execute(QuerySqlite.createTableHome);
     await db.execute(QuerySqlite.createTableProducts);
     await db.execute(QuerySqlite.createTablePlaces);
+    await db.execute(QuerySqlite.createTableUsers);
 
     /// insere dados iniciais básicos
     await db.execute(QuerySqlite.insertsHome);
     await db.execute(QuerySqlite.insertsProductsCategory);
     await db.execute(QuerySqlite.insertsPlaces);
+    await db.execute(QuerySqlite.insertsUser);
 
   }
 

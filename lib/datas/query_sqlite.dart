@@ -30,6 +30,18 @@ CREATE TABLE Places (
 );
 ''';
 
+  static const String createTableUsers = '''
+  CREATE TABLE Users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL,
+    password TEXT NOT NULL,
+    name TEXT NOT NULL,
+    address TEXT NOT NULL
+);
+
+  ''';
+
+
   static const String insertsHome = '''
   INSERT INTO Home (image, x, y, pos) VALUES
 ('https://images.pexels.com/photos/206434/pexels-photo-206434.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=350', 3, 3, 0),
@@ -57,4 +69,10 @@ CREATE TABLE Places (
 
   ''';
 
+
+
+  static const String insertsUser = '''
+  INSERT INTO Users (email, password, name, address) VALUES
+('teste@teste.com', '123456', 'Conta Teste', 'Rua dos Testes, 123');
+  ''';
 }

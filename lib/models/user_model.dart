@@ -27,7 +27,7 @@ class UserModel extends Model {
   }
 
   UserModel() {
-    _httpService = GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.FIREBASE_INJECTION);
+    _httpService = GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.SQLITE_INJECTION);
   }
 
   @override
