@@ -40,20 +40,23 @@ class CartModel extends Model {
   }
 
   void removeCartItem(CartProduct cartProduct) {
-    _httpService.removeCartItem(cartProduct, _validaUsuario());
+    GetIt.instance<IHttpService>(
+        instanceName: ConstantesGlobais.SQLITE_INJECTION).removeCartItem(cartProduct, _validaUsuario());
     products.remove(cartProduct);
     notifyListeners();
   }
 
   void decrementProduct(CartProduct cartProduct) {
     cartProduct.quantity = cartProduct.quantity! - 1;
-    _httpService.decrementProduct(cartProduct, _validaUsuario());
+    GetIt.instance<IHttpService>(
+        instanceName: ConstantesGlobais.SQLITE_INJECTION).decrementProduct(cartProduct, _validaUsuario());
     notifyListeners();
   }
 
   void incrementProduct(CartProduct cartProduct) {
     cartProduct.quantity = cartProduct.quantity! + 1;
-    _httpService.incrementProduct(cartProduct, _validaUsuario());
+    GetIt.instance<IHttpService>(
+        instanceName: ConstantesGlobais.SQLITE_INJECTION).incrementProduct(cartProduct, _validaUsuario());
     notifyListeners();
   }
 

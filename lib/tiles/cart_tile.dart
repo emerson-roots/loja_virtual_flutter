@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
 import 'package:loja_virtual/models/cart_model.dart';
@@ -24,7 +26,8 @@ class CartTile extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(6.0),
               child: Image.network(
-                cartProduct.productData!.images![0],
+                cartProduct.productData!.images![
+                    Random().nextInt(cartProduct.productData!.images!.length)],
                 fit: BoxFit.cover,
               ),
             ),

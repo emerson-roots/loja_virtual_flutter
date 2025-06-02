@@ -53,9 +53,17 @@ class SQLiteDbService implements IHttpService {
   }
 
   @override
-  decrementProduct(CartProduct cartProduct, String userId) {
-    // TODO: implement decrementProduct
-    throw UnimplementedError();
+  decrementProduct(CartProduct cartProduct, String userId) async {
+    final db = await _dbSession.db;
+
+    var result = await db!.rawUpdate(
+      '''
+    UPDATE ${QuerySqlite.CART_PRODUCT_TABLE_NAME} 
+        SET quantity = quantity - 1 
+      WHERE id = ? AND pid = ? AND quantity > 1
+    ''',
+      [cartProduct.cid, cartProduct.pid],
+    );
   }
 
   @override
@@ -157,9 +165,17 @@ class SQLiteDbService implements IHttpService {
   }
 
   @override
-  incrementProduct(CartProduct cartProduct, String userId) {
-    // TODO: implement incrementProduct
-    throw UnimplementedError();
+  incrementProduct(CartProduct cartProduct, String userId) async {
+    final db = await _dbSession.db;
+
+    var result = await db!.rawUpdate(
+      '''
+    UPDATE ${QuerySqlite.CART_PRODUCT_TABLE_NAME} 
+        SET quantity = quantity + 1 
+      WHERE id = ? AND pid = ?
+    ''',
+      [cartProduct.cid, cartProduct.pid],
+    );
   }
 
   @override
@@ -250,9 +266,14 @@ class SQLiteDbService implements IHttpService {
   }
 
   @override
-  removeCartItem(CartProduct cartProduct, String userId) {
-    // TODO: implement removeCartItem
-    throw UnimplementedError();
+  removeCartItem(CartProduct cartProduct, String userId) async {
+    final db = await _dbSession.db;
+
+    int result = await db!.delete(
+      QuerySqlite.CART_PRODUCT_TABLE_NAME,
+      where: 'id = ? AND pid = ?',
+      whereArgs: [cartProduct.cid, cartProduct.pid],
+    );
   }
 
   @override

@@ -1,6 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/datas/Produto.dart';
-import 'package:loja_virtual/datas/product_data.dart';
 import '../screens/product_screen.dart';
 
 class ProductTile extends StatelessWidget {
@@ -32,7 +33,7 @@ class ProductTile extends StatelessWidget {
         AspectRatio(
           aspectRatio: 0.8,
           child: Image.network(
-            product.images![0],
+            product.images![Random().nextInt(product.images!.length)],
             fit: BoxFit.cover,
           ),
         ),
@@ -80,7 +81,7 @@ class ProductTile extends StatelessWidget {
           height: metadeDaTela + (metadeDaTela / 3),
           // altura fixa para a imagem (opcional)
           child: Image.network(
-            product.images![0],
+            product.images![Random().nextInt(product.images!.length)],
             fit: BoxFit.cover,
             height: 250.0,
           ),
