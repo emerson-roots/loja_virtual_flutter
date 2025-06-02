@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/datas/Produto.dart';
 import '../screens/product_screen.dart';
@@ -33,7 +31,7 @@ class ProductTile extends StatelessWidget {
         AspectRatio(
           aspectRatio: 0.8,
           child: Image.network(
-            product.images![Random().nextInt(product.images!.length)],
+            product.images![0],
             fit: BoxFit.cover,
           ),
         ),
@@ -66,14 +64,6 @@ class ProductTile extends StatelessWidget {
     double metadeDaTela = MediaQuery.of(context).size.width / 2;
     return Row(
       children: [
-        /*Flexible(
-          flex: 1,
-          child: Image.network(
-            product.images![0],
-            fit: BoxFit.cover,
-            height: 250.0,
-          ),
-        ),*/
 
         SizedBox(
           width: metadeDaTela,
@@ -81,7 +71,7 @@ class ProductTile extends StatelessWidget {
           height: metadeDaTela + (metadeDaTela / 3),
           // altura fixa para a imagem (opcional)
           child: Image.network(
-            product.images![Random().nextInt(product.images!.length)],
+            product.images![0],
             fit: BoxFit.cover,
             height: 250.0,
           ),

@@ -25,7 +25,7 @@ class SQLiteDbService implements IHttpService {
   addCartItem(CartProduct cartProduct, String userId) async {
     final db = await _dbSession.db;
 
-    await db!.rawInsert(
+    var newId = await db!.rawInsert(
       '''
     INSERT INTO ${QuerySqlite.CART_PRODUCT_TABLE_NAME} (
       uid, pid, category, quantity, size, product_title, product_description, product_price
@@ -42,6 +42,8 @@ class SQLiteDbService implements IHttpService {
         cartProduct.productData?.price,
       ],
     );
+
+    cartProduct.cid = newId.toString();
   }
 
   @override
@@ -64,6 +66,10 @@ class SQLiteDbService implements IHttpService {
     ''',
       [cartProduct.cid, cartProduct.pid],
     );
+
+    if (result <= 0) {
+      throw ExceptionCustom('Falha ao tentar reduzir a quantidade do item no carrinho.');
+    }
   }
 
   @override
@@ -176,6 +182,10 @@ class SQLiteDbService implements IHttpService {
     ''',
       [cartProduct.cid, cartProduct.pid],
     );
+    
+    if (result <= 0) {
+      throw ExceptionCustom('Falha ao tentar incrementar a quantidade do item no carrinho.');
+    }
   }
 
   @override
@@ -274,6 +284,10 @@ class SQLiteDbService implements IHttpService {
       where: 'id = ? AND pid = ?',
       whereArgs: [cartProduct.cid, cartProduct.pid],
     );
+    
+    if (result <= 0) {
+      throw ExceptionCustom('Falha ao tentar remover item do carrinho. O item não foi removido.');
+    }
   }
 
   @override

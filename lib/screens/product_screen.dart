@@ -150,7 +150,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           ),
                   ),
                   onPressed: sizeSelecionado != null
-                      ? () {
+                      ? () async {
                           if (UserModel.of(context).isLoggedIn()) {
                             List<CartProduct> produtosNoCarrinho =
                                 CartModel.of(context).products;
@@ -176,7 +176,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             cartProduct.productData = product;
 
                             // adicionar ao carrinho
-                            CartModel.of(context).addCartItem(cartProduct);
+                            await CartModel.of(context).addCartItem(cartProduct);
 
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => CartScreen()));

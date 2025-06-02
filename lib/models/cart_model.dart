@@ -31,32 +31,32 @@ class CartModel extends Model {
     return ScopedModel.of<CartModel>(context);
   }
 
-  void addCartItem(CartProduct cartProduct) {
-    GetIt.instance<IHttpService>(
+  Future<void> addCartItem(CartProduct cartProduct) async {
+    await GetIt.instance<IHttpService>(
             instanceName: ConstantesGlobais.SQLITE_INJECTION)
         .addCartItem(cartProduct, _validaUsuario());
     products.add(cartProduct);
     notifyListeners();
   }
 
-  void removeCartItem(CartProduct cartProduct) {
-    GetIt.instance<IHttpService>(
+  Future<void> removeCartItem(CartProduct cartProduct) async {
+    await GetIt.instance<IHttpService>(
         instanceName: ConstantesGlobais.SQLITE_INJECTION).removeCartItem(cartProduct, _validaUsuario());
     products.remove(cartProduct);
     notifyListeners();
   }
 
-  void decrementProduct(CartProduct cartProduct) {
-    cartProduct.quantity = cartProduct.quantity! - 1;
-    GetIt.instance<IHttpService>(
+  Future<void> decrementProduct(CartProduct cartProduct) async {
+    await GetIt.instance<IHttpService>(
         instanceName: ConstantesGlobais.SQLITE_INJECTION).decrementProduct(cartProduct, _validaUsuario());
+    cartProduct.quantity = cartProduct.quantity! - 1;
     notifyListeners();
   }
 
-  void incrementProduct(CartProduct cartProduct) {
-    cartProduct.quantity = cartProduct.quantity! + 1;
-    GetIt.instance<IHttpService>(
+  Future<void> incrementProduct(CartProduct cartProduct) async {
+    await GetIt.instance<IHttpService>(
         instanceName: ConstantesGlobais.SQLITE_INJECTION).incrementProduct(cartProduct, _validaUsuario());
+    cartProduct.quantity = cartProduct.quantity! + 1;
     notifyListeners();
   }
 

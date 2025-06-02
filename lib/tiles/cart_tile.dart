@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
+import 'package:loja_virtual/helpers/console_helper.dart';
 import 'package:loja_virtual/models/cart_model.dart';
 
 class CartTile extends StatelessWidget {
@@ -11,6 +10,29 @@ class CartTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _showSnackBarMessage({
+      required String mensagem,
+      required Color corSnackBar,
+      required int tempoDuracaoMensagem,
+    }) {
+      var snackBar = SnackBar(
+        content: Text(mensagem),
+        backgroundColor: corSnackBar,
+        duration: Duration(seconds: tempoDuracaoMensagem),
+        action: SnackBarAction(
+          label: 'FECHAR',
+          textColor: Colors.white,
+          onPressed: () {
+            // Alguma ação opcional
+          },
+        ),
+      );
+
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+
+
     Widget buildContent() {
       /// 29/05/2025 - comentado pois estava sendo chamado em LOOP;
       // CartModel.of(context).updatePrices();
@@ -26,8 +48,7 @@ class CartTile extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(6.0),
               child: Image.network(
-                cartProduct.productData!.images![
-                    Random().nextInt(cartProduct.productData!.images!.length)],
+                cartProduct.productData!.images![0],
                 fit: BoxFit.cover,
               ),
             ),
@@ -60,8 +81,8 @@ class CartTile extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: cartProduct.quantity! > 1
-                            ? () {
-                                CartModel.of(context)
+                            ? () async {
+                                await CartModel.of(context)
                                     .decrementProduct(cartProduct);
                               }
                             : null,
@@ -70,14 +91,27 @@ class CartTile extends StatelessWidget {
                       ),
                       Text(cartProduct.quantity.toString()),
                       IconButton(
-                          onPressed: () {
-                            CartModel.of(context).incrementProduct(cartProduct);
+                          onPressed: () async {
+                            try {
+                              await CartModel.of(context).incrementProduct(cartProduct);
+                            } catch (ex, stack) {
+                                ConsoleHelper.printError('Erro: $ex | Stack: $stack');
+                                _showSnackBarMessage(mensagem: ex.toString(), corSnackBar: Colors.redAccent, tempoDuracaoMensagem: 4);
+                            }
+
                           },
                           icon: const Icon(Icons.add),
                           color: Theme.of(context).primaryColor),
                       TextButton(
-                          onPressed: () {
-                            CartModel.of(context).removeCartItem(cartProduct);
+                          onPressed: () async {
+                            try {
+                              await CartModel.of(context).removeCartItem(cartProduct);
+                            } catch (ex, stack) {
+                                ConsoleHelper.printError('Erro: $ex | Stack: $stack');
+                                _showSnackBarMessage(mensagem: ex.toString(), corSnackBar: Colors.redAccent, tempoDuracaoMensagem: 4);
+
+                            }
+
                           },
                           child: const Text(
                             "Remover",

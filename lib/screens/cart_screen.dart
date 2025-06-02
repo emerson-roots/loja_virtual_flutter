@@ -15,8 +15,7 @@ import '../widgets/custom_activity_indicator.dart';
 class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ConsoleHelper.printAlert(
-        '::: Melhorar logica da tela do carrinho. esta permitindo adicionar o mesmo produto em duplicidade.');
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
