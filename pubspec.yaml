@@ -60,6 +60,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.9.2
+  flutter_native_splash: ^2.2.11
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -102,3 +104,16 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+# necessário rodar o comando "flutter pub run flutter_launcher_icons:main"
+flutter_icons:
+  android: true
+  image_path: "lib/images/icon_app.png"
+
+# necessário rodar o comando "flutter pub run flutter_native_splash:create"
+flutter_native_splash:
+  color: "#e0848c"  # Cor de fundo
+  image: lib/images/icon_app.png  # Imagem do logo (opcional)
+  android: true  # Ativar para Android
+  ios: false
+  web: false
