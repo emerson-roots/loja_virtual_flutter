@@ -84,9 +84,20 @@ class SQLiteDbService implements IHttpService {
   }
 
   @override
-  Future<Cupom> getCupomDesconto(String nomeCupom) {
-    // TODO: implement getCupomDesconto
-    throw UnimplementedError();
+  Future<Cupom> getCupomDesconto(String nomeCupom) async {
+    final db = await _dbSession.db;
+
+    final result = await db!.query(
+      'Coupon',
+      where: 'description = ?',
+      whereArgs: [nomeCupom],
+    );
+
+    if (result.isNotEmpty) {
+      return Cupom.fromJson(result.first);
+    } else {
+      return Cupom.empty();
+    }
   }
 
   @override

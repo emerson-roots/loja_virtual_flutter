@@ -6,7 +6,8 @@ abstract class QuerySqlite {
   static const String PRODUCT_SIZE_TABLE_NAME = 'ProductSizes';
   static const String CART_PRODUCT_TABLE_NAME = 'CartProduct';
   static const String ORDERS_TABLE_NAME = 'Orders';
-  static const String ORDER_PRODUCTS_TABLE_NAME = 'OrderProducts ';
+  static const String ORDER_PRODUCTS_TABLE_NAME = 'OrderProducts';
+  static const String COUPON_TABLE_NAME = 'Coupon';
 
   static const String createTableHome = '''
   CREATE TABLE IF NOT EXISTS Home (
@@ -122,6 +123,14 @@ CREATE TABLE Places (
   ''';
 
 
+  static const String  createTableCoupon = '''
+                  CREATE TABLE $COUPON_TABLE_NAME (
+                    description TEXT PRIMARY KEY,
+                    percent INTEGER
+                );
+  ''';
+
+
   static const String insertsHome = '''
   INSERT INTO Home (image, x, y, pos) VALUES
 ('https://images.pexels.com/photos/206434/pexels-photo-206434.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=350', 3, 3, 0),
@@ -221,6 +230,13 @@ CREATE TABLE Places (
 
 ;
 
+  ''';
+
+
+  static const String insertsCoupons = '''
+  INSERT INTO $COUPON_TABLE_NAME (description, percent) VALUES
+    ('10OFF', 10),
+    ('20OFF', 20);
   ''';
 
 }

@@ -31,6 +31,14 @@ class DiscountCard extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showSnackBarMessage(
+          mensagem:
+              'Utilize os cupons, 10OFF e 20OFF para simular o uso de cupons.\n\nCalculo de frente ainda não está implementado.',
+          corSnackBar: Colors.deepOrange,
+          tempoDuracaoMensagem: 5);
+    });
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       child: ExpansionTile(
@@ -52,7 +60,8 @@ class DiscountCard extends StatelessWidget {
               ),
               initialValue: CartModel.of(context).couponCode ?? "",
               onFieldSubmitted: (text) async {
-                await GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.FIREBASE_INJECTION)
+                await GetIt.instance<IHttpService>(
+                        instanceName: ConstantesGlobais.SQLITE_INJECTION)
                     .getCupomDesconto(text)
                     .then((cupom) {
                   if (cupom != null && cupom.percent > 0) {

@@ -53,6 +53,8 @@ class DbSessionService {
       await db.execute(QuerySqlite.createTableOrders);
       await db.execute(QuerySqlite.createTableOrderProducts);
 
+      await db.execute(QuerySqlite.createTableCoupon);
+
       /// insere dados iniciais básicos
       await db.execute(QuerySqlite.insertsHome);
       await db.execute(QuerySqlite.insertsProductsCategory);
@@ -61,6 +63,7 @@ class DbSessionService {
       await db.execute(QuerySqlite.insertsProducts);
       await db.execute(QuerySqlite.insertsProductImages);
       await db.execute(QuerySqlite.insertsProducSizes);
+      await db.execute(QuerySqlite.insertsCoupons);
     } catch (ex, stack) {
       ConsoleHelper.printError('Erro: $ex | Stack: $stack');
       rethrow;
