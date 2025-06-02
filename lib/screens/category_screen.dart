@@ -80,7 +80,7 @@ class CategoryScreen extends StatelessWidget {
                       crossAxisCount: maximoItensNaHorizontal,
                       mainAxisSpacing: 4.0,
                       crossAxisSpacing: 4.0,
-                      childAspectRatio: 0.65,
+                      childAspectRatio: 0.62,
                     ),
                     itemCount: qtdItensNaGrade,
                     itemBuilder: (context, index) {

@@ -187,6 +187,8 @@ class _ProductScreenState extends State<ProductScreen> {
                         }
                       : null,
                   child: Text(
+                      sizeSelecionado == null ? 'Selecione o tamanho' :
+
                     UserModel.of(context).isLoggedIn()
                         ? "Adicionar ao Carrinho"
                         : "Entre para comprar",

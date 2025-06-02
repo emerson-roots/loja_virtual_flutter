@@ -26,7 +26,15 @@ class DbSessionService {
   Future<Database> _initDatabase() async {
     final path = join(await getDatabasesPath(), 'loja_flutter.db3');
 
-    Database dbOpen = await openDatabase(path, version: 1, onCreate: _onCreate);
+    Database dbOpen = await openDatabase(
+      path,
+      version: 1,
+      onCreate: _onCreate,
+      onOpen: (db) async {
+        // Ativando o suporte a FOREIGN KEY
+        await db.execute('PRAGMA foreign_keys = ON;');
+      },
+    );
     return dbOpen;
   }
 
@@ -42,6 +50,8 @@ class DbSessionService {
       await db.execute(QuerySqlite.createTableProductSizes);
 
       await db.execute(QuerySqlite.createTableCartProducts);
+      await db.execute(QuerySqlite.createTableOrders);
+      await db.execute(QuerySqlite.createTableOrderProducts);
 
       /// insere dados iniciais básicos
       await db.execute(QuerySqlite.insertsHome);

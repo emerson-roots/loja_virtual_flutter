@@ -68,7 +68,8 @@ class SQLiteDbService implements IHttpService {
     );
 
     if (result <= 0) {
-      throw ExceptionCustom('Falha ao tentar reduzir a quantidade do item no carrinho.');
+      throw ExceptionCustom(
+          'Falha ao tentar reduzir a quantidade do item no carrinho.');
     }
   }
 
@@ -98,9 +99,59 @@ class SQLiteDbService implements IHttpService {
   }
 
   @override
-  Future<List<OrderModel>> getPedidosByUserId(String userId) {
-    // TODO: implement getPedidosByUserId
-    throw UnimplementedError();
+  Future<List<OrderModel>> getPedidosByUserId(String userId) async {
+    final db = await _dbSession.db;
+
+    /// recupera pedidos
+    final List<Map<String, dynamic>> orderMaps = await db!.query(
+      QuerySqlite.ORDERS_TABLE_NAME,
+      where: 'uid = ?',
+      whereArgs: [userId],
+      orderBy: 'id DESC',
+    );
+
+    List<OrderModel> orders = [];
+
+    /// percorre cada pedido para popular os itens de pedido
+    for (var orderMap in orderMaps) {
+      final int orderId = orderMap['id'];
+
+      /// recupera itens do pedido
+      final List<Map<String, dynamic>> productMaps = await db.query(
+        QuerySqlite.ORDER_PRODUCTS_TABLE_NAME,
+        where: 'orderId = ?',
+        whereArgs: [orderId],
+      );
+
+      /// monta lista de itens associados ao pedido
+      List<OrderProduct> products = productMaps.map((map) {
+        Produto produto = Produto();
+        produto.title = map['title'];
+        produto.description = map['description'];
+        produto.price = map['price'];
+
+        return OrderProduct(
+          pid: map['pid'],
+          category: map['category'],
+          quantity: map['quantity'],
+          size: map['size'],
+          product: produto,
+        );
+      }).toList();
+
+      /// adiciona pedido a lista de pedidos do usuario
+      orders.add(OrderModel(
+        id: orderId.toString(),
+        clientId: orderMap['uid'],
+        totalPrice: orderMap['totalPrice'],
+        productsPrice: orderMap['productsPrice'],
+        shipPrice: orderMap['shipPrice'],
+        status: orderMap['status'],
+        products: products,
+      ));
+    }
+
+    return orders;
   }
 
   @override
@@ -182,9 +233,10 @@ class SQLiteDbService implements IHttpService {
     ''',
       [cartProduct.cid, cartProduct.pid],
     );
-    
+
     if (result <= 0) {
-      throw ExceptionCustom('Falha ao tentar incrementar a quantidade do item no carrinho.');
+      throw ExceptionCustom(
+          'Falha ao tentar incrementar a quantidade do item no carrinho.');
     }
   }
 
@@ -247,8 +299,8 @@ class SQLiteDbService implements IHttpService {
 
   @override
   Future<void> logar({required Usuario user}) async {
-    Database? dbContact = await _dbSession.db;
-    List<Map<String, dynamic>> maps = await dbContact!.query('Users',
+    Database? db = await _dbSession.db;
+    List<Map<String, dynamic>> maps = await db!.query('Users',
         where: "email = ? and password = ?",
         whereArgs: [user.email, user.password]);
 
@@ -261,10 +313,64 @@ class SQLiteDbService implements IHttpService {
   }
 
   @override
-  Future<String> postFinalizarPedido(List<CartProduct> products, String userId,
-      double valorFrete, double valorTotalProdutos, double valorDesconto) {
-    // TODO: implement postFinalizarPedido
-    throw UnimplementedError();
+  Future<String> postFinalizarPedido(
+      List<CartProduct> products,
+      String userId,
+      double valorFrete,
+      double valorTotalProdutos,
+      double valorDesconto) async {
+    Database? db = await _dbSession.db;
+
+    int orderId = 0;
+    await db!.transaction((Transaction transct) async {
+      // Inserir o pedido na tabela Orders
+      orderId = await transct.rawInsert('''
+                INSERT INTO ${QuerySqlite.ORDERS_TABLE_NAME} (
+                  uid,
+                  status,
+                  totalPrice,
+                  productsPrice,
+                  shipPrice
+                ) VALUES (?, ?, ?, ?, ?);''', [
+        userId,
+        1,
+        valorTotalProdutos - valorDesconto + valorFrete,
+        valorTotalProdutos,
+        valorFrete,
+      ]);
+
+      products.forEach((cartProduct) async {
+        final orderProductId = await transct.rawInsert('''
+                INSERT INTO ${QuerySqlite.ORDER_PRODUCTS_TABLE_NAME} (
+                      orderId,
+                      pid,
+                      category,
+                      description,
+                      price,
+                      title,
+                      quantity,
+                      size
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);''', [
+          orderId,
+          cartProduct.pid,
+          cartProduct.category,
+          cartProduct.productData!.description,
+          cartProduct.productData!.price,
+          cartProduct.productData!.title,
+          cartProduct.quantity,
+          cartProduct.size,
+        ]);
+
+        /// deleta item do carrinho
+        var resultDelete = await transct.delete(
+          QuerySqlite.CART_PRODUCT_TABLE_NAME,
+          where: 'id = ? AND pid = ?',
+          whereArgs: [cartProduct.cid, cartProduct.pid],
+        );
+      });
+    });
+
+    return orderId.toString();
   }
 
   @override
@@ -284,9 +390,10 @@ class SQLiteDbService implements IHttpService {
       where: 'id = ? AND pid = ?',
       whereArgs: [cartProduct.cid, cartProduct.pid],
     );
-    
+
     if (result <= 0) {
-      throw ExceptionCustom('Falha ao tentar remover item do carrinho. O item não foi removido.');
+      throw ExceptionCustom(
+          'Falha ao tentar remover item do carrinho. O item não foi removido.');
     }
   }
 

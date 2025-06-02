@@ -73,7 +73,7 @@ class FirebaseDbimpl extends IHttpService {
         .collection("users")
         .doc(userId)
         .collection("cart")
-        .add(cartProduct.toMap())
+        .add(cartProduct.toJson())
         .then((docReferencia) {
       cartProduct.cid = docReferencia.id;
     });
@@ -96,7 +96,7 @@ class FirebaseDbimpl extends IHttpService {
         .doc(userId)
         .collection("cart")
         .doc(cartProduct.cid)
-        .update(cartProduct.toMap());
+        .update(cartProduct.toJson());
   }
 
   @override
@@ -106,7 +106,7 @@ class FirebaseDbimpl extends IHttpService {
         .doc(userId)
         .collection("cart")
         .doc(cartProduct.cid)
-        .update(cartProduct.toMap());
+        .update(cartProduct.toJson());
   }
 
   @override
@@ -199,7 +199,7 @@ class FirebaseDbimpl extends IHttpService {
     DocumentReference refOrderId =
         await FirebaseFirestore.instance.collection("orders").add({
       "clientId": userId,
-      "products": products.map((cartProduct) => cartProduct.toMap()).toList(),
+      "products": products.map((cartProduct) => cartProduct.toJson()).toList(),
       "shipPrice": valorFrete,
       "productsPrice": valorTotalProdutos,
       "totalPrice": valorTotalProdutos - valorDesconto + valorFrete,

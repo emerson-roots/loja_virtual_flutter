@@ -121,7 +121,8 @@ class CartModel extends Model {
     double discount = getDiscount();
 
     // salva pedido no firebase
-    var idPedido = await _httpService.postFinalizarPedido(
+    var idPedido = await GetIt.instance<IHttpService>(
+        instanceName: ConstantesGlobais.SQLITE_INJECTION).postFinalizarPedido(
       products,
       _validaUsuario(),
       shipPrice,

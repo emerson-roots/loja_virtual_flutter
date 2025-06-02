@@ -5,6 +5,8 @@ abstract class QuerySqlite {
   static const String PRODUCT_IMAGE_TABLE_NAME = 'ProductImages';
   static const String PRODUCT_SIZE_TABLE_NAME = 'ProductSizes';
   static const String CART_PRODUCT_TABLE_NAME = 'CartProduct';
+  static const String ORDERS_TABLE_NAME = 'Orders';
+  static const String ORDER_PRODUCTS_TABLE_NAME = 'OrderProducts ';
 
   static const String createTableHome = '''
   CREATE TABLE IF NOT EXISTS Home (
@@ -93,6 +95,33 @@ CREATE TABLE Places (
 
   ''';
 
+  static const String createTableOrders = '''
+  CREATE TABLE $ORDERS_TABLE_NAME (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          uid TEXT NOT NULL,
+          status INTEGER NOT NULL,
+          totalPrice REAL NOT NULL,
+          productsPrice REAL NOT NULL,
+          shipPrice REAL NOT NULL
+  )
+  ''';
+
+
+  static const String createTableOrderProducts = '''
+            CREATE TABLE IF NOT EXISTS $ORDER_PRODUCTS_TABLE_NAME (
+              orderId INTEGER NOT NULL,
+              pid TEXT NOT NULL,
+              category TEXT,
+              description TEXT,
+              price REAL NOT NULL,
+              title TEXT,
+              quantity INTEGER NOT NULL,
+              size TEXT,
+              FOREIGN KEY (orderId) REFERENCES Orders(id) ON DELETE CASCADE
+            );
+  ''';
+
+
   static const String insertsHome = '''
   INSERT INTO Home (image, x, y, pos) VALUES
 ('https://images.pexels.com/photos/206434/pexels-photo-206434.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=350', 3, 3, 0),
@@ -129,10 +158,16 @@ CREATE TABLE Places (
 
   static const String insertsProducts = '''
   INSERT INTO $PRODUCT_TABLE_NAME (category, title, description, price) VALUES
-('camisetas', 'Camiseta Branca', 'Produto de alta qualidade!', 50.99),
-('camisetas', 'Camiseta azul', 'Descricao blue', 15.5),
-('camisetas', 'Camiseta Verde', 'Um verde de tonalidade tipo musgo', 17.0),
-('calcas', 'Calça Jeans', 'Calça tipo Denin', 89.9);
+('camisetas', 'Camiseta Branca', 'Clássica e versátil, perfeita para qualquer ocasião com muito conforto!', 50.99),
+('camisetas', 'Camiseta azul', 'Azul vibrante com toque macio — estilo e frescor para o seu dia.', 15.5),
+('camisetas', 'Camiseta Verde', 'Estilo urbano em um verde elegante e moderno.', 17.0),
+('calcas', 'Calça Jeans', 'Jeans resistente com caimento perfeito para o dia a dia.', 89.9),
+('blusas', 'Blusa de Manga Longa Preta', 'Ideal para dias mais frios com muito estilo.', 79.9),
+('blusas', 'Blusa de Manga Longa Bege', 'Confortável e versátil para qualquer ocasião.', 69.5),
+('bones', 'Boné Azul e Branco', 'Boné estiloso e discreto para o dia a dia.', 39.9),
+('bones', 'Boné Amarelo', 'Boné moderno com ótima ventilação.', 42.0)
+
+;
 
   ''';
 
@@ -149,7 +184,25 @@ CREATE TABLE Places (
 (3, 'https://img.freepik.com/free-photo/young-woman-with-short-curly-hair-green-t-shirt-clenching-fists-happy-excited-standing-orange-wall_141793-29183.jpg?t=st=1736013577~exp=1736017177~hmac=6ae0bf11064d44a82db32c4ab03fc10539b5d1fddd3e1c11ec8d5000e84ffdd3&w=1380'),
 
 (4, 'https://img.freepik.com/fotos-gratis/denims_1303-4490.jpg?ga=GA1.1.1465085871.1748478929&w=740'),
-(4, 'https://img.freepik.com/fotos-gratis/posicao-mulher-em-escritorio_23-2148180649.jpg');
+(4, 'https://img.freepik.com/fotos-gratis/posicao-mulher-em-escritorio_23-2148180649.jpg'),
+
+-- Blusa de Manga Longa Preta (id 5)
+(5, 'https://img.freepik.com/psd-gratuitas/modelo-de-ambiente-noturno-urbano-de-capuz_23-2151954983.jpg?ga=GA1.1.1465085871.1748478929&w=740'),
+(5, 'https://img.freepik.com/fotos-gratis/homem-de-sueter-preto-e-chapeu-preto-balde-de-roupas-para-jovens_53876-102294.jpg?ga=GA1.1.1465085871.1748478929&semt=ais_items_boosted&w=740'),
+
+-- Blusa de Manga Longa Bege (id 6)
+(6, 'https://img.freepik.com/fotos-gratis/retrato-de-jovem-adulto-usando-maquete-de-capuz_23-2149296264.jpg?t=st=1748879598~exp=1748883198~hmac=9d50ec0f83b6be551fc8369d7bc6df3309c778ed4f46a52552c895b672908387&w=1380'),
+(6, 'https://img.freepik.com/fotos-gratis/retrato-de-jovem-adulto-usando-maquete-de-capuz_23-2149296262.jpg'),
+
+-- Boné azul e branco (id 7)
+(7, 'https://img.freepik.com/fotos-gratis/mulher-de-tiro-medio-usando-chapeu-de-caminhoneiro-no-estudio_23-2149410243.jpg'),
+(7, 'https://img.freepik.com/fotos-gratis/homem-sorridente-posando-com-tiro-medio-de-chapeu-de-caminhoneiro_23-2149410269.jpg?t=st=1748880016~exp=1748883616~hmac=6f56f27f6153a5c7478885dd4e26c744a91de810aadec8153e83a2fc4e4c52e0&w=1380'),
+
+-- Boné Amarelo (id 8)
+(8, 'https://img.freepik.com/fotos-gratis/modelo-loiro-com-bone-amarelo-parece-confiante_114579-17005.jpg?ga=GA1.1.1465085871.1748478929&w=740'),
+(8, 'https://img.freepik.com/fotos-gratis/modelo-loiro-com-bone-amarelo-parece-confiante_114579-18790.jpg?ga=GA1.1.1465085871.1748478929&w=740')
+
+;
 
 
   ''';
@@ -159,7 +212,14 @@ CREATE TABLE Places (
 (1, 'P'), (1, 'M'), (1, 'G'), (1, 'GG'), (1, 'XG'), (1, 'XXG'), (1, 'XL'),
 (2, 'P'), (2, 'G'), (2, 'XL'),
 (3, 'P'), (3, 'M'), (3, 'GG'),
-(4, 'P'), (4, 'M'), (4, 'GG');
+(4, 'P'), (4, 'M'), (4, 'GG'),
+
+(5, 'P'), (5, 'M'), (5, 'GG'),
+(6, 'P'), (6, 'M'), (6, 'G'), (6, 'GG'),
+(7, 'Único'),
+(8, 'Único')
+
+;
 
   ''';
 

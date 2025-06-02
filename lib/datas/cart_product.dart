@@ -23,14 +23,14 @@ class CartProduct {
     size = document.get("size");
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       "category": category,
       "uid": uid,
       "pid": pid,
       "quantity": quantity,
       "size": size,
-      "product": productData?.toResumedMap()
+      "product": productData?.toJson()
     };
   }
 }

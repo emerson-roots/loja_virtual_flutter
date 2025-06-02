@@ -39,11 +39,14 @@ class ProductTile extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(paddingAdaptavel),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   product.title!,
-                  style: TextStyle(fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
+                const SizedBox(height: 5.0,),
                 Text(
                   "R\$ ${product.price!.toStringAsFixed(2)}",
                   style: TextStyle(
@@ -85,8 +88,9 @@ class ProductTile extends StatelessWidget {
               children: [
                 Text(
                   product.title!,
-                  style: TextStyle(fontWeight: FontWeight.w500),
+                  style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
+                const SizedBox(height: 5.0,),
                 Text(
                   "R\$ ${product.price!.toStringAsFixed(2)}",
                   style: TextStyle(
