@@ -1,4 +1,4 @@
-package roots.student.loja_virtual;
+package roots.student.portfolioshop;
 
 import io.flutter.embedding.android.FlutterActivity;
 

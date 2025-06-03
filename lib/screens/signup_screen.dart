@@ -20,6 +20,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
   final _addressController = TextEditingController();
+  bool _isMostrarSenha = true;
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +90,22 @@ class _SignupScreenState extends State<SignupScreen> {
                   const SizedBox(height: 16.0),
                   TextFormField(
                     controller: _passController,
-                    decoration: const InputDecoration(hintText: "Senha"),
-                    obscureText: true,
+                    decoration: InputDecoration(
+                      hintText: "Senha",
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _isMostrarSenha = !_isMostrarSenha;
+                          });
+                        },
+                        icon: Icon(
+                          _isMostrarSenha
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                        ),
+                      ),
+                    ),
+                    obscureText: _isMostrarSenha,
                     validator: (text) {
                       // o validator deve ser usado em conjunto com o _formKey instanciado no inicio da classe
                       // o _formKey deve ser setado na propriedade "key" do widget Form

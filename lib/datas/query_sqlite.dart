@@ -162,7 +162,7 @@ CREATE TABLE Places (
 
   static const String insertsUser = '''
   INSERT INTO Users (email, password, name, address) VALUES
-('test@test.com', '123456', 'Test Account', 'Rua dos Testes, 123');
+('test_account@test.com', '123456', 'Test Account', 'Rua dos Testes, 123');
   ''';
 
   static const String insertsProducts = '''

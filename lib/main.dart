@@ -33,7 +33,7 @@ void main() async {
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      await Firebase.initializeApp();
+      // await Firebase.initializeApp();
 
       runApp(
         MultiProvider(

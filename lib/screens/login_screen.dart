@@ -24,12 +24,13 @@ class _LoginScreenState extends State<LoginScreen> {
   // controladores para capturar informacoes de binding da tela
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isMostrarSenha = false;
 
   @override
   void initState() {
     super.initState();
 
-    _emailController.text = 'test@test.com';
+    _emailController.text = 'test_account@test.com';
     _passwordController.text = '123456';
   }
 
@@ -110,8 +111,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 16.0),
                   TextFormField(
                     controller: _passwordController,
-                    decoration: const InputDecoration(hintText: "Senha"),
-                    obscureText: true,
+                    decoration: InputDecoration(
+                        hintText: "Senha",
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isMostrarSenha = !_isMostrarSenha;
+                            });
+                          },
+                          icon: Icon(
+                            _isMostrarSenha
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                          ),
+                        )),
+                    obscureText: _isMostrarSenha,
                     validator: (text) {
                       // o validator deve ser usado em conjunto com o _formKey instanciado no inicio da classe
                       // o _formKey deve ser setado na propriedade "key" do widget Form
