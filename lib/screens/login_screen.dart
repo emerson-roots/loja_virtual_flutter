@@ -3,6 +3,8 @@ import 'package:loja_virtual/datas/usuario.dart';
 import 'package:loja_virtual/helpers/console_helper.dart';
 import 'package:loja_virtual/screens/home_screen.dart';
 import 'package:loja_virtual/screens/signup_screen.dart';
+import 'package:loja_virtual/services/check_internet_service.dart';
+import 'package:loja_virtual/widgets/message_helper.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../models/user_model.dart';
@@ -130,7 +132,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           alignment: Alignment.centerRight),
                       onPressed: () async {
-
                         try {
                           if (_emailController.text.isEmpty) {
                             _showSnackBarMessage(
@@ -146,13 +147,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 tempoDuracaoMensagem: 3);
                           }
                         } catch (ex, stack) {
-                            ConsoleHelper.printError('Erro: $ex | Stack: $stack');
-                            _showSnackBarMessage(
-                                mensagem: "$ex",
-                                corSnackBar: Colors.redAccent,
-                                tempoDuracaoMensagem: 6);
+                          ConsoleHelper.printError('Erro: $ex | Stack: $stack');
+                          _showSnackBarMessage(
+                              mensagem: "$ex",
+                              corSnackBar: Colors.redAccent,
+                              tempoDuracaoMensagem: 6);
                         }
-
                       },
                       child: const Text(
                         "Esqueci minha senha",
@@ -171,11 +171,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(3.0),
                             ),
                     ),
-                    onPressed: () {
-                      /*if (_formKey.currentState!.validate()) {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => HomeScreen()));
-                    }*/
+                    onPressed: () async {
+                      if (!await CheckInternetService.hasInternetConnection()) {
+                        MessageHelper.showSnackBarMessage(
+                            context: context,
+                            mensagem: 'Sem internet ou conexão limitada.',
+                            corSnackBar: Colors.redAccent,
+                            tempoDuracaoMensagem: 4);
+                        return;
+                      }
 
                       var user = Usuario(
                           email: _emailController.text,

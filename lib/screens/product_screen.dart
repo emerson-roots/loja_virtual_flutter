@@ -6,6 +6,8 @@ import 'package:loja_virtual/models/cart_model.dart';
 import 'package:loja_virtual/models/user_model.dart';
 import 'package:loja_virtual/screens/cart_screen.dart';
 import 'package:loja_virtual/screens/login_screen.dart';
+import 'package:loja_virtual/services/check_internet_service.dart';
+import 'package:loja_virtual/widgets/message_helper.dart';
 
 class ProductScreen extends StatefulWidget {
   final Produto product;
@@ -151,6 +153,16 @@ class _ProductScreenState extends State<ProductScreen> {
                   ),
                   onPressed: sizeSelecionado != null
                       ? () async {
+                          if (!await CheckInternetService
+                              .hasInternetConnection()) {
+                            MessageHelper.showSnackBarMessage(
+                                context: context,
+                                mensagem: 'Sem internet ou conexão limitada.',
+                                corSnackBar: Colors.redAccent,
+                                tempoDuracaoMensagem: 4);
+                            return;
+                          }
+
                           if (UserModel.of(context).isLoggedIn()) {
                             List<CartProduct> produtosNoCarrinho =
                                 CartModel.of(context).products;
@@ -176,7 +188,8 @@ class _ProductScreenState extends State<ProductScreen> {
                             cartProduct.productData = product;
 
                             // adicionar ao carrinho
-                            await CartModel.of(context).addCartItem(cartProduct);
+                            await CartModel.of(context)
+                                .addCartItem(cartProduct);
 
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => CartScreen()));
@@ -187,11 +200,11 @@ class _ProductScreenState extends State<ProductScreen> {
                         }
                       : null,
                   child: Text(
-                      sizeSelecionado == null ? 'Selecione o tamanho' :
-
-                    UserModel.of(context).isLoggedIn()
-                        ? "Adicionar ao Carrinho"
-                        : "Entre para comprar",
+                    sizeSelecionado == null
+                        ? 'Selecione o tamanho'
+                        : UserModel.of(context).isLoggedIn()
+                            ? "Adicionar ao Carrinho"
+                            : "Entre para comprar",
                     style: const TextStyle(
                       fontSize: 18.0,
                       color: Colors.white,

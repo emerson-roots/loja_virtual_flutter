@@ -88,7 +88,7 @@ class SQLiteDbService implements IHttpService {
     final db = await _dbSession.db;
 
     final result = await db!.query(
-      'Coupon',
+      QuerySqlite.COUPON_TABLE_NAME,
       where: 'description = ?',
       whereArgs: [nomeCupom],
     );

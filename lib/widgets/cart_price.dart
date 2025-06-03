@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/models/cart_model.dart';
+import 'package:loja_virtual/services/check_internet_service.dart';
+import 'package:loja_virtual/widgets/message_helper.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class CartPrice extends StatelessWidget {
@@ -9,6 +11,19 @@ class CartPrice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<bool> _hasInternet() async {
+      if (!await CheckInternetService.hasInternetConnection()) {
+        MessageHelper.showSnackBarMessage(
+            context: context,
+            mensagem: 'Sem internet ou conexão limitada.',
+            corSnackBar: Colors.redAccent,
+            tempoDuracaoMensagem: 4);
+        return false;
+      } else {
+        return true;
+      }
+    }
+
     return Card(
       margin: const EdgeInsets.symmetric(
         horizontal: 8.0,
@@ -86,7 +101,17 @@ class CartPrice extends StatelessWidget {
                       borderRadius: BorderRadius.circular(3.0),
                     ),
                   ),
-                  onPressed: buy,
+                  onPressed: () async {
+                    if (!await CheckInternetService.hasInternetConnection()) {
+                      MessageHelper.showSnackBarMessage(
+                          context: context,
+                          mensagem: 'Sem internet ou conexão limitada.',
+                          corSnackBar: Colors.redAccent,
+                          tempoDuracaoMensagem: 4);
+                      return;
+                    }
+                    buy;
+                  },
                   child: const Text(
                     "Finalizar pedido",
                     style: TextStyle(color: Colors.white),

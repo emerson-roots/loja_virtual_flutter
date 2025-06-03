@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/datas/Produto.dart';
+import 'package:loja_virtual/services/check_internet_service.dart';
+import 'package:loja_virtual/widgets/message_helper.dart';
 import '../screens/product_screen.dart';
 
 class ProductTile extends StatelessWidget {
@@ -11,7 +13,16 @@ class ProductTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        if (!await CheckInternetService.hasInternetConnection()) {
+          MessageHelper.showSnackBarMessage(
+              context: context,
+              mensagem: 'Sem internet ou conexão limitada.',
+              corSnackBar: Colors.redAccent,
+              tempoDuracaoMensagem: 4);
+          return;
+        }
+
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => ProductScreen(product)));
       },
@@ -46,7 +57,9 @@ class ProductTile extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
-                const SizedBox(height: 5.0,),
+                const SizedBox(
+                  height: 5.0,
+                ),
                 Text(
                   "R\$ ${product.price!.toStringAsFixed(2)}",
                   style: TextStyle(
@@ -67,7 +80,6 @@ class ProductTile extends StatelessWidget {
     double metadeDaTela = MediaQuery.of(context).size.width / 2;
     return Row(
       children: [
-
         SizedBox(
           width: metadeDaTela,
           // largura fixa para a imagem
@@ -90,7 +102,9 @@ class ProductTile extends StatelessWidget {
                   product.title!,
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
-                const SizedBox(height: 5.0,),
+                const SizedBox(
+                  height: 5.0,
+                ),
                 Text(
                   "R\$ ${product.price!.toStringAsFixed(2)}",
                   style: TextStyle(

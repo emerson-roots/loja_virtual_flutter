@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/models/user_model.dart';
 import 'package:loja_virtual/screens/login_screen.dart';
+import 'package:loja_virtual/services/check_internet_service.dart';
 import 'package:loja_virtual/tiles/drawer_tile.dart';
+import 'package:loja_virtual/widgets/message_helper.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -73,7 +75,20 @@ class CustomDrawer extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                onTap: () {
+                                onTap: () async {
+                                  if (!await CheckInternetService
+                                      .hasInternetConnection()) {
+                                    Navigator.of(context).pop();
+
+                                    MessageHelper.showSnackBarMessage(
+                                        context: context,
+                                        mensagem:
+                                            'Sem internet ou conexão limitada.',
+                                        corSnackBar: Colors.redAccent,
+                                        tempoDuracaoMensagem: 4);
+                                    return;
+                                  }
+
                                   if (!model.isLoggedIn()) {
                                     Navigator.of(context).pushReplacement(
                                       MaterialPageRoute(

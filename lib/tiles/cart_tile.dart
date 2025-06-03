@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
 import 'package:loja_virtual/helpers/console_helper.dart';
 import 'package:loja_virtual/models/cart_model.dart';
+import 'package:loja_virtual/services/check_internet_service.dart';
+import 'package:loja_virtual/widgets/message_helper.dart';
 
 class CartTile extends StatelessWidget {
   final CartProduct cartProduct;
@@ -31,7 +33,6 @@ class CartTile extends StatelessWidget {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
-
 
     Widget buildContent() {
       /// 29/05/2025 - comentado pois estava sendo chamado em LOOP;
@@ -82,6 +83,17 @@ class CartTile extends StatelessWidget {
                       IconButton(
                         onPressed: cartProduct.quantity! > 1
                             ? () async {
+                                if (!await CheckInternetService
+                                    .hasInternetConnection()) {
+                                  MessageHelper.showSnackBarMessage(
+                                      context: context,
+                                      mensagem:
+                                          'Sem internet ou conexão limitada.',
+                                      corSnackBar: Colors.redAccent,
+                                      tempoDuracaoMensagem: 4);
+                                  return;
+                                }
+
                                 await CartModel.of(context)
                                     .decrementProduct(cartProduct);
                               }
@@ -93,25 +105,53 @@ class CartTile extends StatelessWidget {
                       IconButton(
                           onPressed: () async {
                             try {
-                              await CartModel.of(context).incrementProduct(cartProduct);
-                            } catch (ex, stack) {
-                                ConsoleHelper.printError('Erro: $ex | Stack: $stack');
-                                _showSnackBarMessage(mensagem: ex.toString(), corSnackBar: Colors.redAccent, tempoDuracaoMensagem: 4);
-                            }
+                              if (!await CheckInternetService
+                                  .hasInternetConnection()) {
+                                MessageHelper.showSnackBarMessage(
+                                    context: context,
+                                    mensagem:
+                                        'Sem internet ou conexão limitada.',
+                                    corSnackBar: Colors.redAccent,
+                                    tempoDuracaoMensagem: 4);
+                                return;
+                              }
 
+                              await CartModel.of(context)
+                                  .incrementProduct(cartProduct);
+                            } catch (ex, stack) {
+                              ConsoleHelper.printError(
+                                  'Erro: $ex | Stack: $stack');
+                              _showSnackBarMessage(
+                                  mensagem: ex.toString(),
+                                  corSnackBar: Colors.redAccent,
+                                  tempoDuracaoMensagem: 4);
+                            }
                           },
                           icon: const Icon(Icons.add),
                           color: Theme.of(context).primaryColor),
                       TextButton(
                           onPressed: () async {
                             try {
-                              await CartModel.of(context).removeCartItem(cartProduct);
+                              if (!await CheckInternetService
+                                  .hasInternetConnection()) {
+                                MessageHelper.showSnackBarMessage(
+                                    context: context,
+                                    mensagem:
+                                        'Sem internet ou conexão limitada.',
+                                    corSnackBar: Colors.redAccent,
+                                    tempoDuracaoMensagem: 4);
+                                return;
+                              }
+                              await CartModel.of(context)
+                                  .removeCartItem(cartProduct);
                             } catch (ex, stack) {
-                                ConsoleHelper.printError('Erro: $ex | Stack: $stack');
-                                _showSnackBarMessage(mensagem: ex.toString(), corSnackBar: Colors.redAccent, tempoDuracaoMensagem: 4);
-
+                              ConsoleHelper.printError(
+                                  'Erro: $ex | Stack: $stack');
+                              _showSnackBarMessage(
+                                  mensagem: ex.toString(),
+                                  corSnackBar: Colors.redAccent,
+                                  tempoDuracaoMensagem: 4);
                             }
-
                           },
                           child: const Text(
                             "Remover",

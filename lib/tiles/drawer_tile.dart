@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/services/check_internet_service.dart';
+import 'package:loja_virtual/widgets/message_helper.dart';
 
 class DrawerTileCustom extends StatelessWidget {
   // properties
@@ -16,7 +18,17 @@ class DrawerTileCustom extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
+        onTap: () async {
+          if (!await CheckInternetService.hasInternetConnection()) {
+            Navigator.of(context).pop();
+
+            MessageHelper.showSnackBarMessage(
+                context: context,
+                mensagem: 'Sem internet ou conexão limitada.',
+                corSnackBar: Colors.redAccent,
+                tempoDuracaoMensagem: 4);
+            return;
+          }
           pageController.jumpToPage(page);
           // fecha o menu hamburguer
           Navigator.of(context).pop();
