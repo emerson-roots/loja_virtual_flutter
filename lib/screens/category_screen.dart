@@ -17,7 +17,7 @@ class CategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _httpService = GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.SQLITE_INJECTION);
+    _httpService = GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.IHTTP_SERVICE_CONTEXT);
     return DefaultTabController(
       length: qtdTabs,
       child: Scaffold(

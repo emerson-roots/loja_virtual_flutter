@@ -27,7 +27,7 @@ class UserModel extends Model {
   }
 
   UserModel() {
-    _httpService = GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.SQLITE_INJECTION);
+    _httpService = GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.IHTTP_SERVICE_CONTEXT);
   }
 
   @override

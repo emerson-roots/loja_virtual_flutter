@@ -14,7 +14,7 @@ class HomeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // injeção de dependencia com provider: ^6.0.0
-    _httpService = GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.SQLITE_INJECTION);
+    _httpService = GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.IHTTP_SERVICE_CONTEXT);
 
     // renderiza o gradiente de cor de fundo
     Widget _buildBodyBack() => Container(

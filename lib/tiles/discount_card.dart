@@ -61,7 +61,7 @@ class DiscountCard extends StatelessWidget {
               initialValue: CartModel.of(context).couponCode ?? "",
               onFieldSubmitted: (text) async {
                 await GetIt.instance<IHttpService>(
-                        instanceName: ConstantesGlobais.SQLITE_INJECTION)
+                        instanceName: ConstantesGlobais.IHTTP_SERVICE_CONTEXT)
                     .getCupomDesconto(text)
                     .then((cupom) {
                   if (cupom != null && cupom.percent > 0) {

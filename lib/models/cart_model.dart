@@ -20,7 +20,7 @@ class CartModel extends Model {
 
   CartModel(this.user) {
     _httpService = GetIt.instance<IHttpService>(
-        instanceName: ConstantesGlobais.FIREBASE_INJECTION);
+        instanceName: ConstantesGlobais.IHTTP_SERVICE_CONTEXT);
 
     if (user.isLoggedIn()) {
       _loadCartItems();
@@ -32,38 +32,31 @@ class CartModel extends Model {
   }
 
   Future<void> addCartItem(CartProduct cartProduct) async {
-    await GetIt.instance<IHttpService>(
-            instanceName: ConstantesGlobais.SQLITE_INJECTION)
-        .addCartItem(cartProduct, _validaUsuario());
+    await _httpService.addCartItem(cartProduct, _validaUsuario());
     products.add(cartProduct);
     notifyListeners();
   }
 
   Future<void> removeCartItem(CartProduct cartProduct) async {
-    await GetIt.instance<IHttpService>(
-        instanceName: ConstantesGlobais.SQLITE_INJECTION).removeCartItem(cartProduct, _validaUsuario());
+    await _httpService.removeCartItem(cartProduct, _validaUsuario());
     products.remove(cartProduct);
     notifyListeners();
   }
 
   Future<void> decrementProduct(CartProduct cartProduct) async {
-    await GetIt.instance<IHttpService>(
-        instanceName: ConstantesGlobais.SQLITE_INJECTION).decrementProduct(cartProduct, _validaUsuario());
+    await _httpService.decrementProduct(cartProduct, _validaUsuario());
     cartProduct.quantity = cartProduct.quantity! - 1;
     notifyListeners();
   }
 
   Future<void> incrementProduct(CartProduct cartProduct) async {
-    await GetIt.instance<IHttpService>(
-        instanceName: ConstantesGlobais.SQLITE_INJECTION).incrementProduct(cartProduct, _validaUsuario());
+    await _httpService.incrementProduct(cartProduct, _validaUsuario());
     cartProduct.quantity = cartProduct.quantity! + 1;
     notifyListeners();
   }
 
   void _loadCartItems() async {
-    products = await GetIt.instance<IHttpService>(
-            instanceName: ConstantesGlobais.SQLITE_INJECTION)
-        .loadCartItemsByUserId(_validaUsuario());
+    products = await _httpService.loadCartItemsByUserId(_validaUsuario());
     notifyListeners();
   }
 
@@ -121,8 +114,7 @@ class CartModel extends Model {
     double discount = getDiscount();
 
     // salva pedido no firebase
-    var idPedido = await GetIt.instance<IHttpService>(
-        instanceName: ConstantesGlobais.SQLITE_INJECTION).postFinalizarPedido(
+    var idPedido = await _httpService.postFinalizarPedido(
       products,
       _validaUsuario(),
       shipPrice,

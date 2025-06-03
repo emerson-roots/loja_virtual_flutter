@@ -10,7 +10,7 @@ class ProductsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final _httpService = Provider.of<IHttpService>(context);
-    final _httpService = GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.SQLITE_INJECTION);
+    final _httpService = GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.IHTTP_SERVICE_CONTEXT);
 
     return FutureBuilder<List<Categoria>>(
         future: _httpService.getAllCategorias(),

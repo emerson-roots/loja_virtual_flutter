@@ -15,7 +15,7 @@ class OrdersTab extends StatelessWidget {
     if (UserModel.of(context).isLoggedIn()) {
       String uid = UserModel.of(context).usuarioObj!.id!;
       Future<List<OrderModel>> pedidosUsuario =
-          GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.SQLITE_INJECTION).getPedidosByUserId(uid);
+          GetIt.instance<IHttpService>(instanceName: ConstantesGlobais.IHTTP_SERVICE_CONTEXT).getPedidosByUserId(uid);
 
       return FutureBuilder<List<OrderModel>>(
           future: pedidosUsuario,
