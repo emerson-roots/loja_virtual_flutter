@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:loja_virtual/helpers/console_helper.dart';
 import 'package:loja_virtual/models/user_model.dart';
 import 'package:loja_virtual/screens/login_screen.dart';
 import 'package:loja_virtual/screens/order_screen.dart';
 import 'package:loja_virtual/tiles/discount_card.dart';
 import 'package:loja_virtual/widgets/cart_price.dart';
+import 'package:loja_virtual/widgets/message_helper.dart';
 import 'package:loja_virtual/widgets/ship_card.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -12,10 +12,41 @@ import '../models/cart_model.dart';
 import '../tiles/cart_tile.dart';
 import '../widgets/custom_activity_indicator.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
+  const CartScreen({Key? key}) : super(key: key);
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  late bool isAbriuCarrinho = false;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!isAbriuCarrinho) {
+        MessageHelper.showSnackBarMessage(
+            context: context,
+            mensagem:
+                'Utilize os cupons, 10OFF e 20OFF para simular o uso de cupons.\n\nCalculo de frente ainda não está implementado.',
+            corSnackBar: Colors.deepOrange,
+            tempoDuracaoMensagem: 5);
+
+        isAbriuCarrinho = true;
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // isAbriuCarrinho = false;
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,

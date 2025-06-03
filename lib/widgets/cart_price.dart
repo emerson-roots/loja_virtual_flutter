@@ -11,19 +11,6 @@ class CartPrice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<bool> _hasInternet() async {
-      if (!await CheckInternetService.hasInternetConnection()) {
-        MessageHelper.showSnackBarMessage(
-            context: context,
-            mensagem: 'Sem internet ou conexão limitada.',
-            corSnackBar: Colors.redAccent,
-            tempoDuracaoMensagem: 4);
-        return false;
-      } else {
-        return true;
-      }
-    }
-
     return Card(
       margin: const EdgeInsets.symmetric(
         horizontal: 8.0,
@@ -110,7 +97,7 @@ class CartPrice extends StatelessWidget {
                           tempoDuracaoMensagem: 4);
                       return;
                     }
-                    buy;
+                    buy.call();
                   },
                   child: const Text(
                     "Finalizar pedido",

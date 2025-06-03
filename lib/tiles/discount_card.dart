@@ -15,23 +15,8 @@ class DiscountCard extends StatefulWidget {
 }
 
 class _DiscountCardState extends State<DiscountCard> {
-  late bool isAbriuCarrinho = false;
-
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!isAbriuCarrinho) {
-        MessageHelper.showSnackBarMessage(
-            context: context,
-            mensagem:
-                'Utilize os cupons, 10OFF e 20OFF para simular o uso de cupons.\n\nCalculo de frente ainda não está implementado.',
-            corSnackBar: Colors.deepOrange,
-            tempoDuracaoMensagem: 5);
-
-        isAbriuCarrinho = true;
-      }
-    });
-
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       child: ExpansionTile(
